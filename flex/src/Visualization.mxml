@@ -9,19 +9,7 @@
 		</mx:Canvas>
 		<mx:Canvas label="Map" width="100%" height="100%">
 			<maps:Map xmlns:maps="com.google.maps.*" id="map" mapevent_mapready="onMapReady(event)" width="100%" height="100%" key="ABQIAAAAnylVxBr4JiDtDlrqkiOqZxSAhY-_9xEY4tKjfb8L_K9NmjWAChQI34SLLuJiLc6iyGvTQ6_OFJCaRg"/>
-			<mx:Script>
-    		<![CDATA[
-    			import mx.controls.Alert;
-			import com.google.maps.LatLng;
-			import com.google.maps.Map;
-			import com.google.maps.MapEvent;
-			import com.google.maps.MapType;
-
-			private function onMapReady(event:Event):void {
-				this.map.setCenter(new LatLng(42.4262,-71.1382), 15, MapType.NORMAL_MAP_TYPE);
-    		}
-    		]]>
-			</mx:Script>
+			<mx:Script source="map.as"/>
 		</mx:Canvas>
 	</mx:ViewStack>
 	<mx:ButtonBar x="404" y="456" dataProvider="viewstack1"/>

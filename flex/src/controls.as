@@ -1,18 +1,11 @@
 // ActionScript file
-import flash.events.Event;
-
 import mx.collections.ArrayCollection;
 import mx.controls.LinkButton;
 import mx.controls.Text;
 import mx.managers.PopUpManager;
 
 private var _neighborhoodFilters:ArrayCollection = new ArrayCollection();
-
-private function showAll(event:Event):void {
-	for each (var mev:MusicEvent in _events) {
-		setDisplay(mev, event.target.selected);
-	}
-}
+private var _genreFilters:ArrayCollection = new ArrayCollection();
 
 private function recordNeighborhood(zip:String, selected:Boolean):void {
 	_neighborhoodFilters.addItem({zip:zip, selected:selected});
@@ -20,6 +13,14 @@ private function recordNeighborhood(zip:String, selected:Boolean):void {
 
 private function initializeNeighborhoodFilters():void {
 	_neighborhoodFilters = new ArrayCollection();
+}
+
+private function recordGenre(genre:String, selected:Boolean):void {
+	_genreFilters.addItem({genre:genre, selected:selected});
+}
+
+private function initializeGenreFilters():void {
+	_genreFilters = new ArrayCollection();
 }
 
 private function runAllFilters():void {
@@ -45,21 +46,35 @@ private function setDisplay(mev:MusicEvent, selected:Boolean):void {
 }
 
 private function neighborhoodSelect(linkButton:LinkButton, selectionList:Text):void {
-	trace("Called neighborhoodSelect");
+	multiCheckBoxSelect(linkButton, selectionList, _neighborhoodsForControls,
+	                    initializeNeighborhoodFilters, recordNeighborhood, runAllFilters);
+}
+
+private function genreSelect(linkButton:LinkButton, selectionList:Text):void {
+	multiCheckBoxSelect(linkButton, selectionList, _genresForControls,
+	                    initializeGenreFilters, recordGenre, runAllFilters);
+}
+
+private function multiCheckBoxSelect(linkButton:LinkButton,
+                                     selectionList:Text,
+                                     dataProvider:ArrayCollection,
+                                     callbackOnInitialize:Function,
+                                     callbackOnRecord:Function,
+                                     callbackOnComplete:Function):void {
 	/* Open the TitleWindow container.
 	   Cast the return value of the createPopUp() method
 	   to our generic MultiCheckBoxWindow, the name of the 
 	   component containing the TitleWindow container.
 	*/
 	var multiCheckBoxPopup:MultiCheckBoxWindow = 
-		MultiCheckBoxWindow(PopUpManager.createPopUp( this, MultiCheckBoxWindow , true));
+		MultiCheckBoxWindow(PopUpManager.createPopUp(this, MultiCheckBoxWindow, true));
 
 	// Different data providers could be passed in to this showWindow function.
-	multiCheckBoxPopup.dataProvider = _neighborhoodsForControls;
+	multiCheckBoxPopup.dataProvider = dataProvider;
 
-	multiCheckBoxPopup.callbackOnInitialize = initializeNeighborhoodFilters;
-	multiCheckBoxPopup.callbackOnRecord = recordNeighborhood;
-	multiCheckBoxPopup.callbackOnComplete = runAllFilters;
+	multiCheckBoxPopup.callbackOnInitialize = callbackOnInitialize;
+	multiCheckBoxPopup.callbackOnRecord = callbackOnRecord;
+	multiCheckBoxPopup.callbackOnComplete = callbackOnComplete;
  
 	/* Pass a reference to the Text control to the TitleWindow container so that the 
 	   TitleWindow container can return data to the main application.

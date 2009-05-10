@@ -1,6 +1,7 @@
 import flash.events.Event;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
+
 import mx.collections.ArrayCollection;
 
 // Contains all of our music events.  Doesn't change after being loaded.
@@ -35,6 +36,8 @@ private var _neighborhoods:Object = {
 
 private var _neighborhoodsInData:Array = new Array();
 private var _neighborhoodsForControls:ArrayCollection = new ArrayCollection();
+private var _genres:Array = new Array();
+private var _genresForControls:ArrayCollection = new ArrayCollection();
 
 public function init():void {
 	trace("init called");
@@ -54,6 +57,7 @@ private function completeHandler(event:Event):void {
 	var loader:URLLoader = URLLoader(event.target);
 	parseData(loader.data);
 	initializeNeighborhoods();
+	initializeGenres();
 	initializeMap(getMiddleLat(), getMiddleLong(), _events);
 	trace("completeHandler done");
 }
@@ -85,6 +89,15 @@ private function initializeNeighborhoods():void {
 			var neighborhoodDataForControls:Object = {data:mev.getVenue().getZip(), label:_neighborhoods[mev.getVenue().getZip()]};
 			_neighborhoodsForControls.addItem(neighborhoodDataForControls);
 			_neighborhoodsInData[mev.getVenue().getZip()] = _neighborhoods[mev.getVenue().getZip()];
+		}
+	}
+}
+
+private function initializeGenres():void {
+	for each (var mev:MusicEvent in _events) {
+		if (_genres[mev.getType()] == null) {
+			_genresForControls.addItem({data:mev.getType(), label:mev.getType()});
+			_genres[mev.getType()] = mev.getType();
 		}
 	}
 }

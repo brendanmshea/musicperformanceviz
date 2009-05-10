@@ -20,7 +20,6 @@
 		</mx:Canvas>
 	</mx:ViewStack>
 	<mx:ButtonBar x="404" y="456" dataProvider="viewstack1"/>
-	<mx:ComboBox x="556" y="479" dataProvider="{['eat','more','cheeze']}"></mx:ComboBox>
 	<dsc:HSlider x="250" y="479"
                             trackHighlightSkin="com.dougmccune.skins.SliderThumbHighlightSkin"
                             allowTrackClick="true" allowThumbOverlap="true" 
@@ -31,15 +30,21 @@
                             values="[-2000, 4000]"
                             minimum="-9000" maximum="9000" snapInterval="1"
                         />
-	<mx:CheckBox x="660" y="479" label="Show All" click="showAll(event)"/>
-	<!-- This panel contains the neighborhood selector.  -->
-	<mx:HBox x="550" y="505">
+	<!-- Neighborhood selector.  -->
+	<mx:HBox x="480" y="485">
 		<mx:LinkButton id="neighborhoods" label="Neighborhoods" 
 			color="blue" textDecoration="underline"
 			click="neighborhoodSelect(neighborhoods, neighborhoodsSelections)" />
 		<mx:Label text="(click to select)" />
 	</mx:HBox>
-	<mx:Text id="neighborhoodsSelections" width="300" x="550" y="525" />
+	<mx:Text id="neighborhoodsSelections" width="300" x="480" y="505" />
+	<!-- Genre selector. -->
+	<mx:HBox x="710" y="485">
+		<mx:LinkButton id="genres" label="Genre" color="blue" textDecoration="underline"
+		               click="genreSelect(genres, genreSelections)" />
+		<mx:Label text="(click to select)" />
+	</mx:HBox>
+	<mx:Text id="genreSelections" width="300" x="710" y="505" />
 	<mx:Button x="100" y="479" label="Circle" click="drawCircle(graph)"/>
 	<mx:Button x="160" y="479" label="Events" click="drawEventCircles(graph)"/>
 </mx:Application>

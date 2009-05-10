@@ -1,6 +1,5 @@
 package {
 public class MusicEvent {
-  private static var _allEvents:Array = new Array();
 
   private var _id:String;
   private var _eventName:String;
@@ -10,6 +9,7 @@ public class MusicEvent {
   private var _price:String;
   private var _url:String;
   private var _type:String;
+  private var _display:Boolean;
 
   public function MusicEvent( id:String, eventName:String, startTime:String, endTime:String, venue:Venue, price:String, url:String, type:String) {
     _id = id;
@@ -20,8 +20,8 @@ public class MusicEvent {
     _price = price;
     _url = url;
     _type=type;
-
-    _allEvents.push(this);
+    // Initialize display to false.
+    _display = false;
   }
   public function getId( ):String {
     return _id;
@@ -90,6 +90,14 @@ public class MusicEvent {
       }
     return minLong;
   }
+
+	public function getDisplay():Boolean {
+		return _display;
+	}
+
+	public function setDisplay(display:Boolean):void {
+		_display = display;
+	}
 
 	public function toString():String {
 		return "MusicEvent: id " + _id + ", event name: " + _eventName;

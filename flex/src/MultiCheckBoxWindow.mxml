@@ -12,8 +12,9 @@
             
             [Bindable]
             public var dataProvider:ArrayCollection;
-                    
-                               
+
+			public var callbackOnRecord:Function;
+
              private function recordSelections(clearSelections:Boolean):void
              {           
                 selections.text = "";
@@ -23,15 +24,18 @@
                       // We dynamically add a "selected" property 
                       // to the autoAccessories dataProvider.
                       if (clearSelections)  {
-                         dataProvider[i].selected = false; 
+                         dataProvider[i].selected = false;
+                         callbackOnRecord(rpCheckBox[i].data, false);
                       }                         
                       else  {
                          dataProvider[i].selected = rpCheckBox[i].selected;
-                         if (rpCheckBox[i].selected)
+                         if (rpCheckBox[i].selected) {
                             selections.text = selections.text
                                 + "* "
                                 + String(rpCheckBox[i].label)
-                                + "\n"; 
+                                + "\n";
+                         }
+                         callbackOnRecord(rpCheckBox[i].data, rpCheckBox[i].selected);
                       }
                  }
                 PopUpManager.removePopUp(this);                 

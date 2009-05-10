@@ -1,6 +1,7 @@
 import flash.events.Event;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
+import mx.collections.ArrayCollection;
 
 // Contains all of our music events.  Doesn't change after being loaded.
 // However, the event itself keeps track of whether it is 'displayed'

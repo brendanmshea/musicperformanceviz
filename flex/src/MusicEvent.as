@@ -90,5 +90,9 @@ public class MusicEvent {
       }
     return minLong;
   }
+
+	public function toString():String {
+		return "MusicEvent: id " + _id + ", event name: " + _eventName;
+	}
 }
 }

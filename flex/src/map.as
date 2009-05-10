@@ -23,6 +23,12 @@ private function onMapReady(event:Event):void {
 		                              new MarkerOptions({hasShadow: true}));
 	}
 	_isReady = true;
+	// In case some of the events were already selected to be displayed, display them now.
+	for each (var mev:MusicEvent in _musicEvents) {
+		if (mev.getDisplay()) {
+			showOnMap(mev);
+		}
+	}
 }
 
 public function initializeMap(middleLat:Number, middleLong:Number, musicEvents:Array):void {

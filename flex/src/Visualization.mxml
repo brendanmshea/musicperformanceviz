@@ -32,6 +32,14 @@
                             minimum="-9000" maximum="9000" snapInterval="1"
                         />
 	<mx:CheckBox x="660" y="479" label="Show All" click="showAll(event)"/>
+	<!-- This panel contains the neighborhood selector.  -->
+	<mx:HBox x="550" y="505">
+		<mx:LinkButton id="neighborhoods" label="Neighborhoods" 
+			color="blue" textDecoration="underline"
+			click="neighborhoodSelect(neighborhoods, neighborhoodsSelections)" />
+		<mx:Label text="(click to select)" />
+	</mx:HBox>
+	<mx:Text id="neighborhoodsSelections" width="300" x="550" y="525" />
 	<mx:Button x="100" y="479" label="Circle" click="drawCircle(graph)"/>
 	<mx:Button x="160" y="479" label="Events" click="drawEventCircles(graph)"/>
 </mx:Application>

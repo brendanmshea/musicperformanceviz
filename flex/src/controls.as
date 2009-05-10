@@ -36,11 +36,11 @@ private function neighborhoodSelect(linkButton:LinkButton, selectionList:Text):v
 	multiCheckBoxPopup.selections=selectionList;        
  
 	// Calculate position of TitleWindow in Application's coordinates.
-	// Position it a bit down and to the right of the LinkButton control.
+	// Position it a bit up and to the right of the LinkButton control.
 	var point:Point = new Point();
 	point.x=0;
 	point.y=0;        
 	point=linkButton.localToGlobal(point);
 	multiCheckBoxPopup.x=point.x + 120;
-	multiCheckBoxPopup.y=point.y + 12; 
+	multiCheckBoxPopup.y=point.y - 40; 
 }

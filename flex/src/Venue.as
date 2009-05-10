@@ -43,5 +43,9 @@ public class Venue {
   public function getLong( ):String {
     return _long;
   }
+  
+  	public function toString():String {
+		return "Venue: " + _venue;
+	}
 }
 }

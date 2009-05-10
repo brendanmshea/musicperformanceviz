@@ -1,19 +1,32 @@
 // ActionScript file
-import mx.collections.ArrayCollection;
+import flash.events.Event;
+
 import mx.controls.LinkButton;
 import mx.controls.Text;
 import mx.managers.PopUpManager;
 
 private function showAll(event:Event):void {
 	for each (var mev:MusicEvent in _events) {
-		if (mev.getDisplay() == false && event.target.selected) {
-			showOnMap(mev);
-			mev.setDisplay(true);
+		setDisplay(mev, event.target.selected);
+	}
+}
+
+private function recordNeighborhood(zip:String, selected:Boolean):void {
+	for each (var mev:MusicEvent in _events) {
+		if (mev.getVenue().getZip() == zip) {
+			setDisplay(mev, selected);
 		}
-		if (mev.getDisplay() == true && !event.target.selected) {
-			hideOnMap(mev);
-			mev.setDisplay(false);
-		}
+	}
+}
+
+private function setDisplay(mev:MusicEvent, selected:Boolean):void {
+	if (mev.getDisplay() == false && selected) {
+		showOnMap(mev);
+		mev.setDisplay(true);
+	}
+	if (mev.getDisplay() == true && !selected) {
+		hideOnMap(mev);
+		mev.setDisplay(false);
 	}
 }
 
@@ -29,6 +42,8 @@ private function neighborhoodSelect(linkButton:LinkButton, selectionList:Text):v
 
 	// Different data providers could be passed in to this showWindow function.
 	multiCheckBoxPopup.dataProvider = _neighborhoodsForControls;
+
+	multiCheckBoxPopup.callbackOnRecord = recordNeighborhood;
  
 	/* Pass a reference to the Text control to the TitleWindow container so that the 
 	   TitleWindow container can return data to the main application.

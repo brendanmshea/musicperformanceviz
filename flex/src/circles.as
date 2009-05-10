@@ -5,8 +5,8 @@ import mx.containers.Canvas;
 import mx.core.UIComponent;
 
 private function scaleXToCanvas(mev: MusicEvent, c: Canvas): Number {
-	var minl: Number = MusicEvent.getMinLong();
-	var maxl: Number = MusicEvent.getMaxLong();
+	var minl: Number = getMinLong();
+	var maxl: Number = getMaxLong();
 	
 	var l: Number = mev.getVenue().getLong();
 	var range: Number = c.width;
@@ -15,8 +15,8 @@ private function scaleXToCanvas(mev: MusicEvent, c: Canvas): Number {
 }
 
 private function scaleYToCanvas(mev: MusicEvent, c: Canvas): Number {
-	var minl: Number = MusicEvent.getMinLat();
-	var maxl: Number = MusicEvent.getMaxLat();
+	var minl: Number = getMinLat();
+	var maxl: Number = getMaxLat();
 	
 	var l: Number = mev.getVenue().getLat();
 	var range: Number = c.height;
@@ -25,7 +25,7 @@ private function scaleYToCanvas(mev: MusicEvent, c: Canvas): Number {
 }
 
 private function drawEventCircles(c: Canvas): void {
-	for each ( var mev:MusicEvent in _events ) {
+	for each ( var mev:MusicEvent in _filteredEvents ) {
 		drawEventCircle(mev, c);
 	}
 }

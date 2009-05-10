@@ -25,7 +25,7 @@ private function scaleYToCanvas(mev: MusicEvent, c: Canvas): Number {
 }
 
 private function drawEventCircles(c: Canvas): void {
-	for each ( var mev:MusicEvent in _filteredEvents ) {
+	for each ( var mev:MusicEvent in _events ) {
 		drawEventCircle(mev, c);
 	}
 }

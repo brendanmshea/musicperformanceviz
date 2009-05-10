@@ -24,7 +24,7 @@ private function completeHandler(event:Event):void {
 	trace("completeHandler called");
 	var loader:URLLoader = URLLoader(event.target);
 	parseData(loader.data);
-	initializeMap(getMiddleLat(), getMiddleLong());
+	initializeMap(getMiddleLat(), getMiddleLong(), _events);
 	trace("completeHandler done");
 }
 

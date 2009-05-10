@@ -13,10 +13,13 @@
             [Bindable]
             public var dataProvider:ArrayCollection;
 
+			public var callbackOnInitialize:Function;
 			public var callbackOnRecord:Function;
+			public var callbackOnComplete:Function;
 
              private function recordSelections(clearSelections:Boolean):void
-             {           
+             {
+             	callbackOnInitialize();
                 selections.text = "";
 
                 for (var i:int = 0; i < rpCheckBox.length; i++) {
@@ -38,7 +41,8 @@
                          callbackOnRecord(rpCheckBox[i].data, rpCheckBox[i].selected);
                       }
                  }
-                PopUpManager.removePopUp(this);                 
+                PopUpManager.removePopUp(this);
+                callbackOnComplete();                
              }
  
         ]]>

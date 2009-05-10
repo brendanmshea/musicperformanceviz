@@ -1,9 +1,12 @@
 // ActionScript file
 import flash.events.Event;
 
+import mx.collections.ArrayCollection;
 import mx.controls.LinkButton;
 import mx.controls.Text;
 import mx.managers.PopUpManager;
+
+private var _neighborhoodFilters:ArrayCollection = new ArrayCollection();
 
 private function showAll(event:Event):void {
 	for each (var mev:MusicEvent in _events) {
@@ -12,9 +15,20 @@ private function showAll(event:Event):void {
 }
 
 private function recordNeighborhood(zip:String, selected:Boolean):void {
-	for each (var mev:MusicEvent in _events) {
-		if (mev.getVenue().getZip() == zip) {
-			setDisplay(mev, selected);
+	_neighborhoodFilters.addItem({zip:zip, selected:selected});
+}
+
+private function initializeNeighborhoodFilters():void {
+	_neighborhoodFilters = new ArrayCollection();
+}
+
+private function runAllFilters():void {
+	// Neighborhood filters.
+	for each (var zipFilter:Object in _neighborhoodFilters) {
+		for each (var mev:MusicEvent in _events) {
+			if (mev.getVenue().getZip() == zipFilter.zip) {
+				setDisplay(mev, zipFilter.selected);
+			}
 		}
 	}
 }
@@ -43,7 +57,9 @@ private function neighborhoodSelect(linkButton:LinkButton, selectionList:Text):v
 	// Different data providers could be passed in to this showWindow function.
 	multiCheckBoxPopup.dataProvider = _neighborhoodsForControls;
 
+	multiCheckBoxPopup.callbackOnInitialize = initializeNeighborhoodFilters;
 	multiCheckBoxPopup.callbackOnRecord = recordNeighborhood;
+	multiCheckBoxPopup.callbackOnComplete = runAllFilters;
  
 	/* Pass a reference to the Text control to the TitleWindow container so that the 
 	   TitleWindow container can return data to the main application.

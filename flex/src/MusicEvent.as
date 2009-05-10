@@ -1,5 +1,7 @@
 package {
 public class MusicEvent {
+  private static var _allEvents:Array = new Array();
+
   private var _id:String;
   private var _eventName:String;
   private var _startTime:String;
@@ -18,6 +20,8 @@ public class MusicEvent {
     _price = price;
     _url = url;
     _type=type;
+
+    _allEvents.push(this);
   }
   public function getId( ):String {
     return _id;
@@ -42,6 +46,49 @@ public class MusicEvent {
   }
   public function getType( ):String {
     return _type;
+  }
+
+  public static function getAllEvents( ):Array {
+    return _allEvents;
+  }
+
+  // yeah, why are we doing these loops every time?
+  // Because premature optimization... etc.
+  public static function getMaxLat( ):Number {
+    var maxLat:Number = -500.0;
+    for each ( var mev:MusicEvent in getAllEvents() ) {
+        if (maxLat < mev.getVenue().getLat()) {
+          maxLat = mev.getVenue().getLat();
+        }
+      }
+    return maxLat;
+  }
+  public static function getMinLat( ):Number {
+    var minLat:Number = 500.0;
+    for each ( var mev:MusicEvent in getAllEvents() ) {
+        if (minLat > mev.getVenue().getLat()) {
+          minLat = mev.getVenue().getLat();
+        }
+      }
+    return minLat;
+  }
+  public static function getMaxLong( ):Number {
+    var maxLong:Number = -500.0;
+    for each ( var mev:MusicEvent in getAllEvents() ) {
+        if (maxLong < mev.getVenue().getLat()) {
+          maxLong = mev.getVenue().getLat();
+        }
+      }
+    return maxLong;
+  }
+  public static function getMinLong( ):Number {
+    var minLong:Number = 500.0;
+    for each ( var mev:MusicEvent in getAllEvents() ) {
+        if (minLong > mev.getVenue().getLat()) {
+          minLong = mev.getVenue().getLat();
+        }
+      }
+    return minLong;
   }
 }
 }

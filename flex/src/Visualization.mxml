@@ -41,5 +41,6 @@
                         />
 	<mx:CheckBox x="460" y="479" label="Unknown" />
 	<mx:CheckBox x="660" y="479" label="Show" click="showChecktitude(event)"/>
-	<mx:Button x="160" y="479" label="Draw" click="drawCircle(graph)"/>
+	<mx:Button x="100" y="479" label="Circle" click="drawCircle(graph)"/>
+	<mx:Button x="160" y="479" label="Events" click="drawEventCircles(graph)"/>
 </mx:Application>

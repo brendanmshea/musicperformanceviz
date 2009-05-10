@@ -1,14 +1,40 @@
 // gonna put all the stuff for drawing and showing circles in here.
 import flash.events.MouseEvent;
 
+import mx.containers.Canvas;
 import mx.core.UIComponent;
-import util;
 
-private function drawEventCircle(e: MusicEvent, c: Canvas): void {
+private function scaleXToCanvas(mev: MusicEvent, c: Canvas): Number {
+	var minl: Number = MusicEvent.getMinLong();
+	var maxl: Number = MusicEvent.getMaxLong();
+	
+	var l: Number = mev.getVenue().getLong();
+	var range: Number = c.width;
+	
+	return (l - minl) * (maxl - minl) / range;
+}
+
+private function scaleYToCanvas(mev: MusicEvent, c: Canvas): Number {
+	var minl: Number = MusicEvent.getMinLat();
+	var maxl: Number = MusicEvent.getMaxLat();
+	
+	var l: Number = mev.getVenue().getLat();
+	var range: Number = c.height;
+	
+	return (l - minl) * (maxl - minl) / range;
+}
+
+private function drawEventCircles(c: Canvas): void {
+	for each ( var mev:MusicEvent in _events ) {
+		drawEventCircle(mev, c);
+	}
+}
+
+private function drawEventCircle(mev: MusicEvent, c: Canvas): void {
 
   var circleSize:uint = randomNumber(2, 50); // e.getPrice();
-	var circleX:uint = randomNumber(circleSize, c.width - circleSize);
-	var circleY:uint = randomNumber(circleSize, c.height - circleSize);
+	var circleX:uint = scaleXToCanvas(mev, c);
+	var circleY:uint = scaleYToCanvas(mev, c);
 
 	var circle:Shape = new Shape();
 	circle.graphics.beginFill(0xFF0000, 0.5);

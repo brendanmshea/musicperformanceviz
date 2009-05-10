@@ -21,14 +21,12 @@ private function onMapReady(event:Event):void {
 		trace("venue.getLong is " + mev.getVenue().getLong());
 		_mappedMarkers[mev.getId()] = new Marker(new LatLng(mev.getVenue().getLat(), mev.getVenue().getLong()),
 		                              new MarkerOptions({hasShadow: true}));
-	}
-	_isReady = true;
-	// In case some of the events were already selected to be displayed, display them now.
-	for each (var mev:MusicEvent in _musicEvents) {
+		// In case the display property is already enabled, display the event.
 		if (mev.getDisplay()) {
-			showOnMap(mev);
+			this.map.addOverlay(_mappedMarkers[mev.getId()]);
 		}
 	}
+	_isReady = true;
 }
 
 public function initializeMap(middleLat:Number, middleLong:Number, musicEvents:Array):void {

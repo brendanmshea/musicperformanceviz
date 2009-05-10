@@ -1,5 +1,6 @@
 package {
 public class MusicEvent {
+
   private var _id:String;
   private var _eventName:String;
   private var _startTime:String;

@@ -6,10 +6,10 @@ public class Venue {
   private var _region:String;
   private var _zip:String;
   private var _country:String;
-  private var _lat:String;
-  private var _long:String;
+  private var _lat:Number;
+  private var _long:Number;
 
-  public function Venue( venue:String, street:String, city:String, region:String, zip:String, country:String, lat:String, long:String) {
+  public function Venue( venue:String, street:String, city:String, region:String, zip:String, country:String, lat:Number, long:Number) {
     _venue = venue;
     _street = street;
     _city = city;
@@ -37,10 +37,10 @@ public class Venue {
   public function getCountry( ):String {
     return _country;
   }
-  public function getLat( ):String {
+  public function getLat( ):Number {
     return _lat;
   }
-  public function getLong( ):String {
+  public function getLong( ):Number {
     return _long;
   }
   

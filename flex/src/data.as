@@ -2,7 +2,12 @@ import flash.events.Event;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
 
-private var _events:Array = new Array();
+// Contains all of our music events.  Doesn't change after being loaded.
+private var _allEvents:Array = new Array();
+
+// Contains our filtered list of music events.  Recreated every time
+// the user modifies a filter.
+private var _filteredEvents:Array = new Array();
 
 public function init():void {
 	trace("init called");
@@ -34,11 +39,55 @@ private function parseData( result:Object ):void {
 			var fields:Array = line.split("\t");
 			// Event Name	Start Time	End Time	Latitude	Longitude	Venue Name	Street	City	Region	Postalcode	Country	Price	URL	Type	
 
-			var venue:Venue = new Venue(fields[5], fields[6], fields[7], fields[8], fields[9], fields[10], fields[3], fields[4]);
-			_events.push(new MusicEvent(fields[0], fields[0], fields[1], fields[2], venue, fields[11], fields[12], fields[13]));
+			var venue:Venue = new Venue(fields[5], fields[6], fields[7], fields[8], fields[9], fields[10], parseFloat(fields[3]), parseFloat(fields[4]));
+			_allEvents.push(new MusicEvent(fields[0], fields[0], fields[1], fields[2], venue, fields[11], fields[12], fields[13]));
 		} else {
 			firstLine = false;
 		}
 	}
+	// Initialize _filteredEvents to _allEvents.
+	_filteredEvents = _allEvents;
 	trace("parseData done");
+}
+
+// yeah, why are we doing these loops every time?
+// Because premature optimization... etc.
+public function getMaxLat( ):Number {
+	var maxLat:Number = -500.0;
+	for each ( var mev:MusicEvent in _filteredEvents ) {
+		if (maxLat < mev.getVenue().getLat()) {
+			maxLat = mev.getVenue().getLat();
+		}
+	}
+	return maxLat;
+}
+
+public function getMinLat( ):Number {
+	var minLat:Number = 500.0;
+	for each ( var mev:MusicEvent in _filteredEvents ) {
+		if (minLat > mev.getVenue().getLat()) {
+			minLat = mev.getVenue().getLat();
+		}
+	}
+	return minLat;
+}
+
+public function getMaxLong( ):Number {
+	var maxLong:Number = -500.0;
+	for each ( var mev:MusicEvent in _filteredEvents ) {
+		if (maxLong < mev.getVenue().getLat()) {
+			maxLong = mev.getVenue().getLat();
+		}
+	}
+	return maxLong;
+}
+
+public function getMinLong( ):Number {
+	var minLong:Number = 500.0;
+	for each ( var mev:MusicEvent in _filteredEvents ) {
+		if (minLong > mev.getVenue().getLat()) {
+			minLong = mev.getVenue().getLat();
+		}
+	}
+	return minLong;
 }

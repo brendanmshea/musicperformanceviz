@@ -14,7 +14,6 @@ public function init():void {
 	} catch (error:Error) {
 		trace("Unable to load requested document.  error: " + error);
 	}
-	Alert.show("first event is " + _events[0]);
 	trace("init finished");
 }
 

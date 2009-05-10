@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" title="Please select" modalTransparencyBlur="0">
+	<mx:Script>
+        <![CDATA[       
+            import mx.managers.PopUpManager;
+            import mx.controls.Text;
+            import mx.core.Repeater;
+            import mx.collections.ArrayCollection;                        
+                 
+            // A reference to the TextInput control in which to put the result.
+            public var selections:Text;
+            
+            [Bindable]
+            public var dataProvider:ArrayCollection;
+                    
+                               
+             private function recordSelections(clearSelections:Boolean):void
+             {           
+                selections.text = "";
+
+                for (var i:int = 0; i < rpCheckBox.length; i++) {
+              
+                      // We dynamically add a "selected" property 
+                      // to the autoAccessories dataProvider.
+                      if (clearSelections)  {
+                         dataProvider[i].selected = false; 
+                      }                         
+                      else  {
+                         dataProvider[i].selected = rpCheckBox[i].selected;
+                         if (rpCheckBox[i].selected)
+                            selections.text = selections.text
+                                + "* "
+                                + String(rpCheckBox[i].label)
+                                + "\n"; 
+                      }
+                 }
+                PopUpManager.removePopUp(this);                 
+             }
+ 
+        ]]>
+    </mx:Script>
+
+    <mx:VBox borderStyle="inset" 
+             horizontalGap="10" verticalGap="5"
+             paddingLeft="10" paddingTop="10"
+             paddingBottom="10" paddingRight="10" 
+             maxHeight="300"    
+             verticalScrollPolicy="auto"
+             horizontalScrollPolicy="off"
+             >
+             <mx:Repeater id="rp" dataProvider="{dataProvider}">
+                 <mx:CheckBox id="rpCheckBox"
+                      selected="{rp.currentItem.selected}"  
+                     label="{rp.currentItem.label}"
+                     data="{rp.currentItem.data}"                      
+                 />
+             </mx:Repeater>    
+    </mx:VBox>
+
+    <mx:HBox>
+        <mx:Button label="OK"     click="recordSelections(false)" />
+        <mx:Button label="Cancel" click="PopUpManager.removePopUp(this)" />
+        <!-- "true" passed into recordSelections tells it that we're clearing -->
+        <mx:Button label="Clear"  click="recordSelections(true)" />        
+    </mx:HBox>
+</mx:TitleWindow>

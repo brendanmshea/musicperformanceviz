@@ -24,9 +24,9 @@ private function completeHandler(event:Event):void {
 	trace("completeHandler done");
 }
 
-public function parseData( result:Object ):void {
+private function parseData( result:Object ):void {
 	trace("parseData called");
- 	var lines:Array = result.split("\n");
+	var lines:Array = result.split("\n");
 	var firstLine:Boolean = true;
 	for each ( var line:String in lines ) {
 		// Skip the first line, which is titles.
@@ -40,5 +40,5 @@ public function parseData( result:Object ):void {
 			firstLine = false;
 		}
 	}
- 	trace("parseData done");
+	trace("parseData done");
 }

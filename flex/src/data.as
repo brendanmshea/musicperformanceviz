@@ -1,6 +1,7 @@
 import flash.events.Event;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
+import mx.utils.StringUtil;
 
 import mx.collections.ArrayCollection;
 
@@ -86,7 +87,7 @@ private function initializeNeighborhoods():void {
 		trace("looking up " + mev.getVenue().getZip());
 		if (_neighborhoods[mev.getVenue().getZip()] != null && _neighborhoodsInData[mev.getVenue().getZip()] == null) {
 			trace("adding " + mev.getVenue().getZip());
-			var neighborhoodDataForControls:Object = {data:mev.getVenue().getZip(), label:_neighborhoods[mev.getVenue().getZip()]};
+			var neighborhoodDataForControls:Object = {data:mev.getVenue().getZip(), label:StringUtil.trim(_neighborhoods[mev.getVenue().getZip()])};
 			_neighborhoodsForControls.addItem(neighborhoodDataForControls);
 			_neighborhoodsInData[mev.getVenue().getZip()] = _neighborhoods[mev.getVenue().getZip()];
 		}
@@ -96,7 +97,7 @@ private function initializeNeighborhoods():void {
 private function initializeGenres():void {
 	for each (var mev:MusicEvent in _events) {
 		if (_genres[mev.getType()] == null) {
-			_genresForControls.addItem({data:mev.getType(), label:mev.getType()});
+			_genresForControls.addItem({data:mev.getType(), label:StringUtil.trim(mev.getType())});
 			_genres[mev.getType()] = mev.getType();
 		}
 	}

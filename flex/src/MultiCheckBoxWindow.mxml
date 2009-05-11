@@ -17,7 +17,7 @@
 			public var callbackOnRecord:Function;
 			public var callbackOnComplete:Function;
 
-             private function recordSelections(clearSelections:Boolean):void
+             private function recordSelections(clearSelections:Boolean, allSelections:Boolean):void
              {
              	callbackOnInitialize();
                 selections.text = "";
@@ -29,8 +29,10 @@
                       if (clearSelections)  {
                          dataProvider[i].selected = false;
                          callbackOnRecord(rpCheckBox[i].data, false);
-                      }                         
-                      else  {
+                      } else {
+                      	 if (allSelections) {
+                      	 	rpCheckBox[i].selected = true;
+                      	 }
                          dataProvider[i].selected = rpCheckBox[i].selected;
                          if (rpCheckBox[i].selected) {
                             selections.text = selections.text
@@ -66,9 +68,10 @@
     </mx:VBox>
 
     <mx:HBox>
-        <mx:Button label="OK"     click="recordSelections(false)" />
+        <mx:Button label="OK"     click="recordSelections(false, false)" />
         <mx:Button label="Cancel" click="PopUpManager.removePopUp(this)" />
         <!-- "true" passed into recordSelections tells it that we're clearing -->
-        <mx:Button label="Clear"  click="recordSelections(true)" />        
+        <mx:Button label="Clear"  click="recordSelections(true, false)" />
+        <mx:Button label="All"    click="recordSelections(false, true)" />      
     </mx:HBox>
 </mx:TitleWindow>

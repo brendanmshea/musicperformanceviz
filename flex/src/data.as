@@ -1,11 +1,44 @@
 import flash.events.Event;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
+import mx.utils.StringUtil;
+
+import mx.collections.ArrayCollection;
 
 // Contains all of our music events.  Doesn't change after being loaded.
 // However, the event itself keeps track of whether it is 'displayed'
 // or not, based on the filter.
 private var _events:Array = new Array();
+
+private var _neighborhoods:Object = {
+                                     "01770":"Sherborn",
+                                     "02115":"Boston",
+                                     "02137":"Readville",
+                                     "02138":"Harvard Square",
+                                     "02139":"Inman Square",
+                                     "02140":"Porter Square",
+                                     "02141":"East Cambridge",
+                                     "02142":"Kendall Square",
+                                     "02143":"East Somerville",
+                                     "02144":"West Somerville",
+                                     "02145":"Winter Hill",
+                                     "02148":"Malden",
+                                     "02149":"Everett",
+                                     "02150":"Chelsea",
+                                     "02151":"Revere Beach",
+                                     "02152":"Winthrop",
+                                     "02153":"Tufts University",
+                                     "02154":"East Cambridge",
+                                     "02155":"Medford",
+                                     "02156":"West Medford",
+                                     "02163":"Soldiers Field"
+
+                                     }
+
+private var _neighborhoodsInData:Array = new Array();
+private var _neighborhoodsForControls:ArrayCollection = new ArrayCollection();
+private var _genres:Array = new Array();
+private var _genresForControls:ArrayCollection = new ArrayCollection();
 
 public function init():void {
 	trace("init called");
@@ -24,6 +57,8 @@ private function completeHandler(event:Event):void {
 	trace("completeHandler called");
 	var loader:URLLoader = URLLoader(event.target);
 	parseData(loader.data);
+	initializeNeighborhoods();
+	initializeGenres();
 	initializeMap(getMiddleLat(), getMiddleLong(), _events);
 	trace("completeHandler done");
 }
@@ -45,6 +80,27 @@ private function parseData( result:Object ):void {
 		}
 	}
 	trace("parseData done");
+}
+
+private function initializeNeighborhoods():void {
+	for each (var mev:MusicEvent in _events) {
+		trace("looking up " + mev.getVenue().getZip());
+		if (_neighborhoods[mev.getVenue().getZip()] != null && _neighborhoodsInData[mev.getVenue().getZip()] == null) {
+			trace("adding " + mev.getVenue().getZip());
+			var neighborhoodDataForControls:Object = {data:mev.getVenue().getZip(), label:StringUtil.trim(_neighborhoods[mev.getVenue().getZip()])};
+			_neighborhoodsForControls.addItem(neighborhoodDataForControls);
+			_neighborhoodsInData[mev.getVenue().getZip()] = _neighborhoods[mev.getVenue().getZip()];
+		}
+	}
+}
+
+private function initializeGenres():void {
+	for each (var mev:MusicEvent in _events) {
+		if (_genres[mev.getType()] == null) {
+			_genresForControls.addItem({data:mev.getType(), label:StringUtil.trim(mev.getType())});
+			_genres[mev.getType()] = mev.getType();
+		}
+	}
 }
 
 // yeah, why are we doing these loops every time?

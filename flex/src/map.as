@@ -21,6 +21,10 @@ private function onMapReady(event:Event):void {
 		trace("venue.getLong is " + mev.getVenue().getLong());
 		_mappedMarkers[mev.getId()] = new Marker(new LatLng(mev.getVenue().getLat(), mev.getVenue().getLong()),
 		                              new MarkerOptions({hasShadow: true}));
+		// In case the display property is already enabled, display the event.
+		if (mev.getDisplay()) {
+			this.map.addOverlay(_mappedMarkers[mev.getId()]);
+		}
 	}
 	_isReady = true;
 }

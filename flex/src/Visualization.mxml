@@ -45,6 +45,6 @@
 		<mx:Label text="(click to select)" />
 	</mx:HBox>
 	<mx:Text id="genreSelections" width="300" x="710" y="505" />
-	<mx:Button x="100" y="479" label="Circle" click="drawCircle(graph)"/>
-	<mx:Button x="160" y="479" label="Events" click="drawEventCircles(graph)"/>
+	<mx:Button x="100" y="479" label="Circle" click="drawCircle()"/>
+	<mx:Button x="160" y="479" label="Events" click="drawEventCircles()"/>
 </mx:Application>

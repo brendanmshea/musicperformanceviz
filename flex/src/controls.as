@@ -24,13 +24,22 @@ private function initializeGenreFilters():void {
 }
 
 private function runAllFilters():void {
-	// Neighborhood filters.
-	for each (var zipFilter:Object in _neighborhoodFilters) {
-		for each (var mev:MusicEvent in _events) {
-			if (mev.getVenue().getZip() == zipFilter.zip) {
-				setDisplay(mev, zipFilter.selected);
+	for each (var mev:MusicEvent in _events) {
+		// Neighborhood filter.
+		var inZip:Boolean = false;
+		for each (var zipFilter:Object in _neighborhoodFilters) {
+			if (mev.getVenue().getZip() == zipFilter.zip && zipFilter.selected) {
+				inZip = true;
 			}
 		}
+		// Genre filter.
+		var inGenre:Boolean = false;
+		for each (var genreFilter:Object in _genreFilters) {
+			if (mev.getType() == genreFilter.genre && genreFilter.selected) {
+				inGenre = true;
+			}
+		}
+		setDisplay(mev, (inZip && inGenre));
 	}
 }
 

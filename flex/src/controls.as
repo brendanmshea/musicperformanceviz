@@ -100,3 +100,33 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
 	multiCheckBoxPopup.x=point.x + 120;
 	multiCheckBoxPopup.y=point.y - 40; 
 }
+
+//basic function to create the labels for our slider based on minimum and maximum values of slider, and number of labels to show
+private function getSliderLabels(amount:Number, numberOfLabels:Number):Array
+{
+	var interval:Number = amount / (numberOfLabels - 1);
+	var tmpArray:Array = new Array();
+	var labelCounter:Number = timeSlider.minimum; 
+	var loopCounter:Number = 0;
+
+	while(loopCounter <= amount)
+	{
+		tmpArray.push(Math.round(labelCounter));
+		labelCounter += interval;
+		loopCounter += interval;
+	}
+	return tmpArray;
+}
+            
+//sample dataTip function which is passed in to be used as our slider dataTipFunction
+private function tmpDataTipFunction(value:String):String
+{
+	return "The Value = " + Number(value).toPrecision(5);
+}
+            
+//sample function which catches the sliderChange event when the thumb values are updated in the dual-slider component
+private function catchSliderChangeEvent(event:Event):void
+{
+	text1.text = Number(event.target.values[0]).toPrecision(5);
+	text2.text = Number(event.target.values[1]).toPrecision(5);
+}

@@ -1,0 +1,631 @@
+<?xml version="1.0"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns="*"
+		   width="100%" height="60" 
+		   backgroundColor="#FFFFFF" 
+		   backgroundAlpha="0" horizontalScrollPolicy="off" verticalScrollPolicy="off"
+		   creationComplete="componentComplete()">
+	
+	<mx:Metadata>
+		[Event("sliderChange")]
+	</mx:Metadata>
+		
+    	
+    	<mx:HSlider id="theSlider"
+    				width="100%" 
+    				values="{valuesCollection.source}"
+    				minimum="{minimum}" maximum="{maximum}"
+    				showDataTip="{showDataTip}"
+					dataTipPlacement="top" 
+					dataTipOffset="0"
+		    		dataTipFormatFunction="{dataTipFormatFunction}"
+    				tickColor="#0033CC" 
+		    		snapInterval="0"
+		    		thumbCount="2"
+		    		labels="{sliderLabels}" 
+		    		tickInterval="{Math.abs(maximum - minimum) / (numberOfLabels - 1)}" 
+		    		allowTrackClick="true" 
+		    		liveDragging="true"
+		    		change="sliderChange(event)"
+		    		 />
+		    		 
+			 <GradientBox id="theSlideBox" 
+			 		      cornerRadius="3" 
+			 		      innerRadius="3"
+			 		      borderThickness="1" borderColor="#CCCCCC" borderStyle="solid"
+			 		      horizontalAlign="center" verticalAlign="middle"
+			 		      height="15"
+			 		      y="40"
+			 		    
+			 		      gradientColors="{[0xEEEEEE, dragSliderColor]}"
+			 		      gradientAlphas="{SLIDER_GRADIENT_OFF}"
+			 		      gradientRatios="[0, 255]"
+			 		      gradientAngle="90"
+			 		 
+			 		      mouseOver="mouseOverEvent(event)" 
+			 		      mouseDown="mouseDownEvent(event)" 
+			 		      mouseUp="mouseUpEvent(event)" 
+			 		      mouseOut="mouseOutEvent(event)"
+			 		      mouseMove="mouseMoveEvent(event)"
+			 		 	  >
+		 		 <mx:Image source="@Embed('scroll_grabber.png')"  />
+		 	</GradientBox>
+		 
+    
+    
+    
+    <mx:Script>
+        <![CDATA[
+    	import mx.controls.sliderClasses.SliderThumb;
+    	import mx.controls.sliderClasses.Slider;
+    	import mx.core.Application;
+    	import mx.core.UIComponent;
+    	import mx.events.SliderEvent;
+    	import mx.managers.CursorManager;
+    	import mx.managers.SystemManager;
+    	import mx.controls.sliderClasses.Slider;
+    	import mx.collections.ArrayCollection;
+        
+        
+        //-------------------------------------------------------------------------
+		/*
+			PUBLIC
+		*/
+		[Bindable]
+        public var numberOfLabels:Number;				//the number of lables we want displayed on our slider
+        [Bindable]
+        public var dataTipFormatFunction:Function;		//a function specifying how we want our dataTip text formatted
+        [Bindable]
+        public var sliderLabels:Array;					//an array of text items we'll use for the labels on our slider
+        [Bindable]
+        public var showDataTip:Boolean;					//show dataTips or not
+        [Bindable]
+        public var dragSliderColor:uint;				//the bottom gradient color to use for the slider
+        
+        //implicit setter so if the values are influenced by an outside script, the slider updates appropriately
+		[Bindable]
+		private var _values:Array;
+		[Bindable]
+		public function set values(value:Array):void
+		{
+			if(value != null)
+			{
+				_values = value;
+				if(componentLoadComplete) setComponent();
+			}
+		}
+		public function get values():Array
+		{
+			return _values;
+		}
+		
+		//implicit setter so if the values are influenced by an outside script, the slider updates appropriately
+		[Bindable]
+        private var _minimum:Number;						//the lowest value on our slider
+        [Bindable]
+		public function set minimum(value:Number):void
+		{
+			if(!isNaN(value))
+			{
+				_minimum = value;
+				initComponent();
+			}
+		}
+		public function get minimum():Number
+		{
+			return _minimum;
+		}
+		
+		//implicit setter so if the values are influenced by an outside script, the slider updates appropriately
+		[Bindable]
+        private var _maximum:Number;						//the highst value on our slider
+        [Bindable]
+		public function set maximum(value:Number):void
+		{
+			if(!isNaN(value))
+			{
+				_maximum = value;
+				initComponent();
+			}
+		}
+		public function get maximum():Number
+		{
+			return _maximum;
+		}
+		
+        
+        //-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		
+        	[Bindable]
+			private var valuesCollection:ArrayCollection;	//the initial values for our thumb positions
+		
+        //SLIDER VARS
+	        private var leftThumb:SliderThumb;		//instance of our leftmost thumb
+	        private var rightThumb:SliderThumb;		//instance of our rightmost thumb
+	        private var minSliderX:Number;			//the leftmost X position that the left SliderThumb can be placed
+	        private var maxSliderX:Number;			//the rightmost X position that the right SliderThumb can be placed
+	        private var tickerSpan:Number;			//set on component start to determine ratio of ticker values to x axis values
+	        private var defaultLeftValue:Number;	//the starting value for the leftmost thumb -- placeholder var set from values array
+			private var defaultRightValue:Number;	//the starting value for the rightmost thumb -- placeholder var set from values array
+        
+        //DRAG MEASUREMENT VARS
+	        private var startMouseX:Number;			//hoder var to captures mouse position on drag initiate
+	        private var currentTickerSpan:Number; 	//holder var set on mousedown to catch current scrolltrack width
+	        private var startLeftValue:Number;		//a placeholder to determine horizontal movement difference after drag is initiated
+	        private var startRightValue:Number;		//a placeholder to determine horizontal movement difference after drag is initiated
+
+        
+        
+        //BOOLEAN FLAGS
+	        private var componentLoadComplete:Boolean = false;	//Flag variable set to true once component is measured and set min/max boundaries
+	        private var doDragTrue:Boolean = false;	//a flag variable used to determine if we are in dragging process
+	        private var onEdge:Boolean = false;		//a flag which freezes movement when moused to edge of slidetrack
+		
+		//CUSTOM CURSOR VARS
+			private var cursorID:Number = 0;		//holder var for cursor instances
+			[Bindable]
+			private var CURSOR_OFFSET:Number = -8;
+			[Bindable]
+	        [Embed(source="open_hand.png")] 
+	        private var openHandCursorSymbol:Class; 
+	        [Bindable]
+	        [Embed(source="closed_hand.png")] 
+	        private var closedHandCursorSymbol:Class; 
+
+		//DRAG SCROLLBAR VARS
+			[Bindable]
+			private var SLIDER_GRADIENT_OFF:Array = [.5, 0.1];
+	        private var SLIDER_GRADIENT_ON:Array = [.5, 0.5];
+        
+        
+        
+        
+        
+        //-------------------------------------------------------------------------
+        /*
+			PUBLIC
+		*/
+		//called from parent to set initial values -- called manually incase the slider input values are changed by an outside
+		//action requiring an update to the slider before display
+        public function setComponent():void
+        {
+        	//sets the default positions for the thumbs
+			valuesCollection = new ArrayCollection(_values);
+			//new positions ares set above, this dispatches sliderChange to update outside display which may rely on slider values
+			theSlider.dispatchEvent(new SliderEvent("change", true));
+			//need to redraw the scrollbar to these new values
+			callLater(measureSliderBox);
+			//setting event handlers on the parent box of this component so that it catches mouseUp, mouseMove, and mouseOut events if we are dragging
+			//and the user accidentally mouses of the scrollbar box
+			setSystemEventHandlers();
+        }
+        
+       	//-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		private function initComponent():void
+		{
+			if(!isNaN(_minimum) && !isNaN(_maximum))
+			{
+				valuesCollection = new ArrayCollection([_minimum, _maximum]);
+   			}
+		}
+		
+		//-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		//called on Slider creationComplete -- initially measures thumb positions and sets min and max positions to restrict dragging past slider bar ends
+        private function componentComplete():void
+        {
+        	//manually setting height to minimum value allowed
+        	this.height = 60;
+        	
+        	
+        	//getting our thumb instances
+        	leftThumb = theSlider.getThumbAt(0);
+			rightThumb = theSlider.getThumbAt(1);
+			
+			//setting our leftmost and rightmost slider points
+        	minSliderX = leftThumb.x;
+        	maxSliderX = rightThumb.x;
+        	
+			//setting the ratio between x axis and a full ticker interval value
+        	tickerSpan =  (maxSliderX - minSliderX) / (_maximum - _minimum);
+
+			//setting an offset value which effectively draws the scrollbar to the center of each thumb instance 
+			componentLoadComplete = true;
+			
+			setComponent();
+        }
+
+        //-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		private function measureSliderBox():void
+        {
+        	//sets the measurements for a drag box to match the x positions of the thumb sliders
+        	if(leftThumb != null && rightThumb != null)
+        	{
+        		theSlideBox.x = leftThumb.x + leftThumb.width / 2;
+        		theSlideBox.width = rightThumb.x - leftThumb.x;
+        	}
+        }
+        
+        //-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		//handles outside events on systemManager to continue drag if cursor position leaves sliderBox -- thanks to Mike
+        private function setSystemEventHandlers():void
+        {
+    		Application.application.systemManager.addEventListener("mouseUp", mouseUpEvent);
+	 		Application.application.systemManager.addEventListener("mouseMove", mouseMoveEvent);
+	 		
+        }
+        
+        //-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		//captures the entire stage/application mouseout event and initiates a mouseUpEvent call
+        private function captureStageEvent(event:MouseEvent):void
+        {
+        	if(event.relatedObject == null)
+        	{
+        		stage.removeEventListener("mouseOut", captureStageEvent);
+        		callLater(mouseUpEvent, [event]);
+        	}
+        }
+        
+        //-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		//when we change the SliderThumb positions, we "piggy-back" off the change event on the slider to dispatch an event to the parent
+		//and also set the measurements of our drag bar to the new slider values
+		private function sliderChange(event:Event):void
+		{
+			if(!doDragTrue)
+			{
+				this.dispatchEvent(new Event("sliderChange", true));
+				measureSliderBox();
+			}
+		}
+		
+		//-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		private function setOpenHandCursor(event:MouseEvent):void 
+		{
+			//cursor change method to show open hand and sets proper offsets
+			CursorManager.removeCursor(cursorID)
+            cursorID = CursorManager.setCursor(openHandCursorSymbol, 2, CURSOR_OFFSET, CURSOR_OFFSET);
+        }
+        
+       //-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+        private function setClosedHandCursor(event:MouseEvent):void 
+		{
+			//cursor change method to show closed hand and sets proper offsets
+			CursorManager.removeCursor(cursorID)
+            cursorID = CursorManager.setCursor(closedHandCursorSymbol, 2, CURSOR_OFFSET, CURSOR_OFFSET);
+        }
+		
+		//-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		private function mouseOverEvent(event:MouseEvent):void
+		{
+			//changing our cursor to show an open hand indicating drag functionality for this event.target
+			if(!doDragTrue) 
+			{
+				setOpenHandCursor(event);
+			}
+		}
+		
+		//-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		private function mouseUpEvent(event:MouseEvent):void
+		{
+			if(doDragTrue)
+			{
+				//removing the stage event listener that was set during mouseDown
+				stage.removeEventListener("mouseOut", captureStageEvent);
+        		
+				//setting our drag box style back to normal
+				theSlideBox.gradientAlphas = SLIDER_GRADIENT_OFF;
+				theSlideBox.invalidateDisplayList();
+				
+				//setting our cursor back to the open hand
+				(event.target == theSlideBox) ? setOpenHandCursor(event) : CursorManager.removeCursor(cursorID);
+				
+				//setting our drag flag back to false to indicate we're finished dragging
+				doDragTrue = false;
+				
+				//remove datatips if showing
+				if(showDataTip)
+				{
+					destroyDataTips();
+				}
+			}
+			//call a final measure for the grab box to make sure it's x position and width exactly match our final thumb drag positions
+			measureSliderBox();
+					
+		}
+		
+		//-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		private function mouseOutEvent(event:MouseEvent):void
+		{
+			//if we're not dragging, we just need to remove the open hand cursor as we move off the draggable event.target
+			if(!doDragTrue)
+			{
+				CursorManager.removeCursor(cursorID);
+			}
+		}
+
+		//-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		private function mouseDownEvent(event:MouseEvent):void
+		{
+			//adds an event listener to the entire application to catch the mouse leaving our SWF area and stop drag appropriately
+			stage.addEventListener("mouseOut", captureStageEvent);	
+			
+			//change cursor to show that our hand "grabbed" the slider bar
+			setClosedHandCursor(event);
+			//setting our drag flag so that other methods can check to see if we are actively dragging
+			doDragTrue = true;
+			
+			//setting our watcher position to the mouse position when we click down on a thumb
+			startMouseX = Application.application.mouseX;
+			startLeftValue = Number(valuesCollection.getItemAt(0));
+			startRightValue = Number(valuesCollection.getItemAt(1))
+			
+			//change the style of our slider bar to show it's been grabbed
+			theSlideBox.gradientAlphas = SLIDER_GRADIENT_ON;
+			theSlideBox.invalidateDisplayList();
+			
+			//if we're showing dataTips for our slider, initiate the left and right dataTip for our dual-drag action
+			if(showDataTip)
+			{
+				showToolTip(leftThumb);
+				showToolTip(rightThumb);
+			}
+			measureSliderBox();
+		}
+		
+		//-------------------------------------------------------------------------
+		/*
+			PRIVATE
+		*/
+		private function mouseMoveEvent(event:MouseEvent):void
+		{
+			if(doDragTrue)
+			{
+				//calculate the distance the mouse has moved on the x axis
+				var difference:Number = (Application.application.mouseX - startMouseX) / tickerSpan;
+				
+				var tmpLeft:Number = Number(valuesCollection.getItemAt(0));
+				var tmpRight:Number = Number(valuesCollection.getItemAt(1));
+				
+				//check to make sure that we're still within the edges of the slider
+				if((difference < 0 && tmpLeft > _minimum) || (difference > 0 && tmpRight < _maximum))
+				{
+					onEdge = false;
+					valuesCollection.setItemAt((startLeftValue + difference), 0);
+					valuesCollection.setItemAt((startRightValue + difference), 1);
+				}	
+				//uses boolean onEdge so this doesn't keep getting called
+				else if(Number(valuesCollection.getItemAt(0)) <= _minimum && !onEdge)
+				{
+					onEdge = true;
+					startMouseX = Application.application.mouseX;
+					startRightValue = _minimum + (startRightValue - startLeftValue);
+					startLeftValue = _minimum;
+					valuesCollection.setItemAt(startRightValue, 1);
+					valuesCollection.setItemAt(startLeftValue, 0);
+				}
+				//uses boolean onEdge so this doesn't keep getting called
+				else if(Number(valuesCollection.getItemAt(1)) >= _maximum && !onEdge)
+				{
+					onEdge = true;
+					startMouseX = Application.application.mouseX;
+					startLeftValue = _maximum - (startRightValue - startLeftValue);
+					startRightValue = _maximum;
+					valuesCollection.setItemAt(startLeftValue, 0);
+					valuesCollection.setItemAt(startRightValue, 1);
+				}
+				
+				if(showDataTip)
+				{
+					positionDataTip(leftThumb, dataTips[0]);
+					positionDataTip(rightThumb, dataTips[1]);
+					updateToolTipLabel(rightThumb, dataTips[1]);
+					updateToolTipLabel(leftThumb, dataTips[0]);
+				}
+				
+				theSlider.executeBindings(true);
+				measureSliderBox();
+				this.dispatchEvent(new Event("sliderChange", true));
+			}
+		}
+		
+		
+		
+		
+		
+//-------------------------------------------------------------------------
+//FUNCTIONALITY COPIED FROM mx.controls.sliderClasses.Slider to achieve manual creation of toolTips during dual-drag
+//-------------------------------------------------------------------------
+
+		
+		import mx.controls.sliderClasses.SliderDataTip;
+		import mx.controls.sliderClasses.SliderDirection;
+		import mx.formatters.NumberBase;
+		import mx.formatters.DateFormatter;
+
+		//-------------------------------------------------------------------------
+		
+		//a holder array for dataTips we manually create on our dual-slide action
+		private var dataTips:Array = new Array();
+		//a default data Formatter for dataTip formatting if we don't have a custom defined format function passed in through dataTipFormatFunction
+		private var dataFormatter:* = new NumberBase(".",",",".","");
+		
+		//-------------------------------------------------------------------------
+		
+		//functionality from mx.controls.sliderClasses.Slider
+		//removes any tooltips we have showing
+		private function destroyDataTips():void
+		{
+			if (dataTips)
+			{
+				for(var i:int = 0; i< dataTips.length; i++)
+				{
+					systemManager.toolTipChildren.removeChild(dataTips[i]);
+				}
+				dataTips = new Array();
+			}
+		}
+		
+		//-------------------------------------------------------------------------
+		
+		//functionality from mx.controls.sliderClasses.Slider
+		private function showToolTip(theThumb:SliderThumb):void
+		{
+
+			var tipIndex:int = dataTips.length;
+
+			dataTips[tipIndex] = new SliderDataTip();
+			systemManager.toolTipChildren.addChild(dataTips[tipIndex]);
+
+			var dataTipStyleName:String = theSlider.getStyle("dataTipStyleName");
+			if (dataTipStyleName)
+			{
+				dataTips[tipIndex].styleName = dataTipStyleName;
+			}
+
+			//calls functionality copied from mx.controls.sliderClasses.Slider class to position tooltips based on thumb position
+			updateToolTipLabel(theThumb, dataTips[tipIndex]);
+			
+			dataTips[tipIndex].validateNow();
+			dataTips[tipIndex].setActualSize(dataTips[tipIndex].getExplicitOrMeasuredWidth(),dataTips[tipIndex].getExplicitOrMeasuredHeight());
+			positionDataTip(theThumb, dataTips[tipIndex]);
+
+		}
+		
+		//-------------------------------------------------------------------------
+		
+		//functionality from mx.controls.sliderClasses.Slider to set text in dataTop field based on custom function or 
+		private function updateToolTipLabel(theThumb:Object, dataTip:SliderDataTip):void
+		{
+			var sliderValue:Number
+			if(theThumb == leftThumb) sliderValue = Number(valuesCollection.getItemAt(0));
+			if(theThumb == rightThumb) sliderValue = Number(valuesCollection.getItemAt(1));
+			
+			var formattedVal:String = "";
+			if (dataTipFormatFunction != null)
+			{
+				formattedVal = this.dataTipFormatFunction(String(sliderValue));
+			}
+			else
+ 			{
+ 				formattedVal = dataFormatter.formatPrecision(String(sliderValue), theSlider.getStyle("dataTipPrecision"));
+ 			}
+			dataTip.text = formattedVal;
+		}
+		
+		//-------------------------------------------------------------------------
+		
+		//functionality from mx.controls.sliderClasses.Slider to position the manually created dataTips from showToolTip function
+		private function positionDataTip(theThumb:Object, dataTip:SliderDataTip):void
+		{
+			var relX:Number;
+			var relY:Number;
+	
+			var tX:Number = theThumb.x;
+			var tY:Number = theThumb.y;
+	
+			var tPlacement:String =  theSlider.getStyle("dataTipPlacement");
+			var tOffset:Number = theSlider.getStyle("dataTipOffset");
+	
+			if (theSlider is HSlider)
+			{
+				relX = tX;
+				relY = tY;
+	
+				if (tPlacement == "left")
+				{
+					relX -= tOffset + dataTip.width;
+					relY += (theThumb.height - dataTip.height) / 2;
+				}
+				else if (tPlacement == "right")
+				{
+					relX += tOffset + theThumb.width;
+					relY += (theThumb.height - dataTip.height) / 2;
+				}
+				else if (tPlacement == "top")
+				{
+					relY -= tOffset + dataTip.height;
+					if(theThumb == leftThumb) relX -= (dataTip.width);
+					if(theThumb == rightThumb) relX = relX;
+				}
+				else if (tPlacement == "bottom")
+				{
+					relY += tOffset + theThumb.height;
+					relX -= (dataTip.width - theThumb.width) / 2;
+				}
+			}
+			else
+			{
+				relX = tY;
+				relY = unscaledHeight - tX - (dataTip.height + theThumb.width) / 2;
+	
+				if (tPlacement == "left")
+				{
+					relX -= tOffset + dataTip.width;
+				}
+				else if (tPlacement == "right")
+				{
+					relX += tOffset + theThumb.height;
+				}
+				else if (tPlacement == "top")
+				{
+					relY -= tOffset + (dataTip.height + theThumb.width) / 2;
+					relX -= (dataTip.width - theThumb.height) / 2;
+				}
+				else if (tPlacement == "bottom")
+				{
+					relY += tOffset + (dataTip.height + theThumb.width) / 2;
+					relX -= (dataTip.width - theThumb.height) / 2;
+				}
+			}
+			
+			var o:Point = new Point(relX, relY);
+			var r:Point = localToGlobal(o);
+	
+			dataTip.x = r.x < 0 ? 0 : r.x;
+			dataTip.y = r.y < 0 ? 0 : r.y;
+		}
+
+		
+        ]]>    
+    </mx:Script>
+    
+</mx:Canvas>
+	

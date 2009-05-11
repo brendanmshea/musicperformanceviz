@@ -1,5 +1,6 @@
 package {
 public class MusicEvent {
+  private static var _allEvents:Array = new Array();
 
   private var _id:String;
   private var _eventName:String;
@@ -22,7 +23,9 @@ public class MusicEvent {
     _type=type;
     // Initialize display to false.
     _display = false;
-  }
+
+    _allEvents.push(this);
+}
   public function getId( ):String {
     return _id;
   }

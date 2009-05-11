@@ -46,6 +46,7 @@ private function runAllFilters():void {
 private function setDisplay(mev:MusicEvent, selected:Boolean):void {
 	if (mev.getDisplay() == false && selected) {
 		showOnMap(mev);
+		drawEventCircle(mev);
 		mev.setDisplay(true);
 	}
 	if (mev.getDisplay() == true && !selected) {

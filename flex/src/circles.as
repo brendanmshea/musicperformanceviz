@@ -24,17 +24,17 @@ private function scaleYToCanvas(mev: MusicEvent, c: Canvas): Number {
 	return (l - minl) * (maxl - minl) / range;
 }
 
-private function drawEventCircles(c: Canvas): void {
+private function drawEventCircles(): void {
 	for each ( var mev:MusicEvent in _events ) {
-		drawEventCircle(mev, c);
+		drawEventCircle(mev);
 	}
 }
 
-private function drawEventCircle(mev: MusicEvent, c: Canvas): void {
+private function drawEventCircle(mev: MusicEvent): void {
 
   var circleSize:uint = randomNumber(2, 50); // e.getPrice();
-	var circleX:uint = scaleXToCanvas(mev, c);
-	var circleY:uint = scaleYToCanvas(mev, c);
+	var circleX:uint = scaleXToCanvas(mev, this.graph);
+	var circleY:uint = scaleYToCanvas(mev, this.graph);
 
 	var circle:Shape = new Shape();
 	circle.graphics.beginFill(0xFF0000, 0.5);
@@ -47,13 +47,13 @@ private function drawEventCircle(mev: MusicEvent, c: Canvas): void {
 	comp.addEventListener(MouseEvent.CLICK, circleClick);
 
 	comp.addChild(circle);
-	c.addChild(comp);
+	this.graph.addChild(comp);
 }
 
-private function drawCircle(c: Canvas): void {
+private function drawCircle(): void {
 	var circleSize:uint = randomNumber(2, 50);
-	var circleX:uint = randomNumber(circleSize, c.width - circleSize);
-	var circleY:uint = randomNumber(circleSize, c.height - circleSize);
+	var circleX:uint = randomNumber(circleSize, this.graph.width - circleSize);
+	var circleY:uint = randomNumber(circleSize, this.graph.height - circleSize);
 
 	var circle:Shape = new Shape();
 	circle.graphics.beginFill(0xFF0000, 0.5);
@@ -66,7 +66,7 @@ private function drawCircle(c: Canvas): void {
 	comp.addEventListener(MouseEvent.CLICK, circleClick);
 
 	comp.addChild(circle);
-	c.addChild(comp);
+	this.graph.addChild(comp);
 }
 
 private function circleHover(event:MouseEvent):void {

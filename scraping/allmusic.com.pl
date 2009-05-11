@@ -55,27 +55,16 @@ while (<>) {
 sub trim_performer {
   my ($name) = @_;
 
-  if ($name =~ /presents:?\s*(.*)/i) { # ignore who's doing the presenting
-    return $1;
-  }
+  $name =~ s/.*?presents:?\s*(.*)/$1/i; # ignore who's doing the presenting
 
-  if ($name =~ /(.*)with special guest/i) { # ignore the special guests
-    return $1;
-  }
-  if ($name =~ /(.*)feat(\.|uring)/i) { # ignore the special guests
-    return $1;
-  }
-  if ($name =~ /(.*)(returns to|playing at)/i) { # add-on junk
-    return $1;
-  }
+  $name =~ s/(.*)feat(\.|uring).*/$1/i; # ignore the special guests
 
-  if ($name =~ m{(.*?)[/,|:&]}i) { # take the first of a multiple
-    return $1;
-  }
+  $name =~ s/(.*)(returns to|playing at).*/$1/i; # add-on junk
 
-  if ($name =~ /(.*)with/i) { # at this point, ignore anything that's "with"
-    return $1; # note that this loses us some stuff, since sometimes it's "music with person"
-  }
+  $name =~ s{(.*?)[/,|:&].*}{$1}i; # take the first of a multiple
+
+  $name =~ s/(.*)with.*/$1/i; # ignore anything that's "with"
+  # note that this loses us some stuff, since sometimes it's "music with person"
 
   # all else failed, just assume all of this is the name
   return $name;

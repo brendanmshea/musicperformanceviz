@@ -24,7 +24,7 @@ foreach my $chunk ( 0...$numchunks ) {
 
   my $fname = html_fname($datadir, "rss", $chunk);
 
-  my $rss = fetch_through_cache($fname, $url)
+  my $rss = fetch_through_cache($fname, $url);
 
   my @items = $rss =~ m{<item>(.*?)</item>}sg;
 
@@ -43,6 +43,10 @@ foreach my $chunk ( 0...$numchunks ) {
     $data{country} = get_rss_generic("xCal:x-calconnect-country", $item);
     $data{imageurl} = get_rss_generic("url", $item);
     $data{url} = get_rss_generic("xCal:url", $item);
+
+    foreach my $code (qw(id longid eventname starttime endtime latitude longitude venuename street city region postalcode country price rawprice url type)) {
+      undef $data{$code} unless $data{$code};
+    }
 
     my $title = get_rss_generic("title", $item);
     my ($eventname) = $title =~ m{^Event:\s*(.*?) at $data{venuename},};
@@ -73,6 +77,6 @@ sub printstuff {
 
   my @fieldorder = qw(id longid eventname starttime endtime latitude longitude venuename street city region postalcode country price rawprice url type);
 
-  print join "\t", map {defined($datahash->{$_}) ? $datahash->{$_} : "?"} @fieldorder;
+  print tab_collate($datahash, \@fieldorder);
   print "\n";
 }

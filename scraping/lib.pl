@@ -6,6 +6,17 @@ sub html_fname {
   return sprintf "%s/%s-%02d.html", $dir, $type, $count;
 }
 
+# 
+sub tab_collate {
+  my ($datahash, $fieldorder) = @_;
+
+  my $unknown = ""; # "" or "?"
+  my $result = join "\t", map {defined($datahash->{$_}) ? $datahash->{$_} : $unknown} @$fieldorder;
+#  my $result = join "\t", map {$datahash->{$_} ? $datahash->{$_} : $unknown} @$fieldorder;
+
+  return $result;
+}
+
 # simple cacheing
 sub fetch_through_cache {
   my ($fname, $url) = @_;

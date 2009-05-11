@@ -2,6 +2,7 @@ sub get_rss_generic {
   my ($tag, $blob) = @_;
 
   my ($data) = $blob =~ m{<$tag>(.*?)</$tag>};
+  $data =~ s/\t/ /g if defined $data;
 
   return $data;
 }
@@ -25,6 +26,7 @@ sub get_html_raw_price {
   my ($blob) = @_;
 
   my ($price) = $blob =~ m{<div class="extra"><span class="title">Price:</span>([^<]+)</div>};
+  $price =~ s/\t/ /g if defined $price;
 
   return $price;
 }
@@ -56,6 +58,7 @@ sub get_html_type {
 </div>
 }x;
 
+  $typeword =~ s/\t/ /g if defined $typeword;
   return $typeword;
 }
 

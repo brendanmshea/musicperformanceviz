@@ -41,7 +41,7 @@ private function drawEventCircle(mev: MusicEvent): void {
 	circle.graphics.drawCircle(circleX, circleY, circleSize);
 	circle.graphics.endFill();
 
-	var comp:UIComponent = new UIComponent();
+	var comp:MEVComponent = new MEVComponent(mev);
 	comp.addEventListener(MouseEvent.MOUSE_OVER, circleHover);
 	comp.addEventListener(MouseEvent.MOUSE_OUT, circleUnHover);
 	comp.addEventListener(MouseEvent.CLICK, circleClick);
@@ -70,15 +70,14 @@ private function drawCircle(): void {
 }
 
 private function circleHover(event:MouseEvent):void {
-	event.target.alpha = 1.8;
+	event.target.handleHover();
 }
 
 private function circleUnHover(event:MouseEvent):void {
-	event.target.alpha = 1.0;
+	event.target.handleUnHover();
 }
 
 private function circleClick(event:MouseEvent):void {
-	mx.controls.Alert.show("click!");
+	event.target.handleClick();
 }
 
-      

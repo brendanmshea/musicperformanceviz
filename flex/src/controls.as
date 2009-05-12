@@ -48,15 +48,15 @@ private function runAllFilters():void {
 		// Time filter.
 		var inTime:Boolean = false;
 		if (_minSelectedDate != null && _maxSelectedDate != null && mev.getStartTime() != null &&
-		    _minSelectedDate.valueOf() < mev.getStartTime().valueOf() &&
-		    _maxSelectedDate.valueOf() > mev.getStartTime().valueOf()) {
+		    _minSelectedDate.valueOf() <= mev.getStartTime().valueOf() &&
+		    _maxSelectedDate.valueOf() >= mev.getStartTime().valueOf()) {
 			inTime = true;
 		}
 		// Price filter.
 		var inPrice:Boolean = false;
 		if (mev.getPrice() >= 0 &&
-		    _minSelectedPrice < mev.getPrice() &&
-		    _maxSelectedPrice > mev.getPrice()) {
+		    _minSelectedPrice <= mev.getPrice() &&
+		    _maxSelectedPrice >= mev.getPrice()) {
 			inPrice = true;
 		}
 		setDisplay(mev, (inZip && inGenre && inTime && inPrice));

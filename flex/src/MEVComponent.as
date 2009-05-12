@@ -16,7 +16,7 @@ package
 			var circle:Shape = new Shape();
 
 			var circleSize:uint = p_mev.getPrice(); // randomNumber(2, 50);
-			if (circleSize == 0) {
+			if (p_mev.getPrice() == 0) {
 				circleSize = 3;
 				circle.graphics.lineStyle(4, 0x33FF00, 0.8);
 			}

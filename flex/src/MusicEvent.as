@@ -1,4 +1,5 @@
 package {
+import mx.containers.Canvas;
 public class MusicEvent {
   private var _id:String;
   private var _eventName:String;
@@ -11,6 +12,7 @@ public class MusicEvent {
   private var _url:String;
   private var _type:String;
   private var _display:Boolean;
+  private var _graphItem:MEVComponent;
 
   public function MusicEvent( id:String, eventName:String, startTime:String, endTime:String, venue:Venue, price:String, url:String, type:String) {
     _id = id;
@@ -95,5 +97,23 @@ public class MusicEvent {
 		return new Date(Number(dateComponents[0]), Number(dateComponents[1]), Number(dateComponents[2]),
 		                Number(timeComponents[0]), Number(timeComponents[1]), Number(timeComponents[2]));
 	}
+
+	public function showGraphItem(c: Canvas): void {
+		if (_graphItem == null) {
+			_graphItem = new MEVComponent(this, c);
+		} else {
+			_graphItem.visible = true;
+		}
+	}
+
+	public function hideGraphItem(): void {
+		if (_graphItem == null) {
+			// do nothing.  it doesn't even exist yet
+		} else {
+			_graphItem.visible = false;
+		}
+	}
+
+
 }
 }

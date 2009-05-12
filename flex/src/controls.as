@@ -66,11 +66,12 @@ private function runAllFilters():void {
 private function setDisplay(mev:MusicEvent, selected:Boolean):void {
 	if (mev.getDisplay() == false && selected) {
 		showOnMap(mev);
-		drawEventCircle(mev);
+		mev.showGraphItem(graph);
 		mev.setDisplay(true);
 	}
 	if (mev.getDisplay() == true && !selected) {
 		hideOnMap(mev);
+		mev.hideGraphItem();
 		mev.setDisplay(false);
 	}
 }

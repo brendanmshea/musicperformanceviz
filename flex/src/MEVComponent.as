@@ -13,11 +13,16 @@ package
 			super();
 			mev = p_mev;
 
-			var circleSize:uint = randomNumber(2, 50); // e.getPrice();
+			var circle:Shape = new Shape();
+
+			var circleSize:uint = p_mev.getPrice(); // randomNumber(2, 50);
+			if (circleSize == 0) {
+				circleSize = 3;
+				circle.graphics.lineStyle(4, 0x33FF00, 0.8);
+			}
 			var circleX:uint = randomNumber(circleSize, c.width - circleSize); //scaleXToCanvas(mev, this.graph);
 			var circleY:uint = randomNumber(circleSize, c.height - circleSize); //scaleYToCanvas(mev, this.graph);
 
-			var circle:Shape = new Shape();
 			circle.graphics.beginFill(0xFF0000, 0.5);
 			circle.graphics.drawCircle(circleX, circleY, circleSize);
 			circle.graphics.endFill();
@@ -32,7 +37,7 @@ package
 		}
 
 		private function handleClick(event:MouseEvent):void {
-			Alert.show(mev.getEventName());
+			Alert.show(mev.getEventName() + " - " + mev.getPrice());
 		}
 		
 		private function handleHover(event:MouseEvent):void {

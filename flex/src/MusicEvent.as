@@ -6,7 +6,8 @@ public class MusicEvent {
   private var _rawEndTime:String;
   private var _startTime:Date;
   private var _venue:Venue;
-  private var _price:String;
+  private var _rawPrice:String;
+  private var _price:Number;
   private var _url:String;
   private var _type:String;
   private var _display:Boolean;
@@ -17,13 +18,16 @@ public class MusicEvent {
     _rawStartTime = startTime;
     _rawEndTime = endTime;
     _venue = venue;
-    _price = price;
+    _rawPrice = price;
     _url = url;
     _type=type;
     // Initialize display to false.
     _display = false;
     // Parse the dates.
     _startTime = parseDate(_rawStartTime);
+    // Parse the price.
+    _price = Number(_rawPrice);
+    
 }
   public function getId( ):String {
     return _id;
@@ -40,8 +44,8 @@ public class MusicEvent {
   public function getVenue( ):Venue {
     return _venue;
   }
-  public function getPrice( ):String {
-    return _price;
+  public function getRawPrice( ):String {
+    return _rawPrice;
   }
   public function getUrl( ):String {
     return _url;
@@ -52,6 +56,10 @@ public class MusicEvent {
 
 	public function getStartTime():Date {
 		return _startTime;
+	}
+
+	public function getPrice():Number {
+		return _price;
 	}
 
 	public function getDisplay():Boolean {

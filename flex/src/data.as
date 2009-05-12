@@ -41,6 +41,8 @@ private var _genres:Array = new Array();
 private var _genresForControls:ArrayCollection = new ArrayCollection();
 private var _minDate:Date = new Date(0);
 private var _maxDate:Date = new Date(0);
+private var _minPrice:Number = 0;
+private var _maxPrice:Number = 0;
 private var _dataInitialized:Boolean = false;
 
 public function init():void {
@@ -64,6 +66,7 @@ private function completeHandler(event:Event):void {
 	initializeGenres();
 	initializeMap(getMiddleLat(), getMiddleLong(), _events);
 	initializeDates();
+	initializePrices();
 	_dataInitialized = true;
 	trace("completeHandler done");
 }
@@ -112,7 +115,7 @@ private function initializeDates():void {
 	initializeSelectedDates();
 }
 
-public function initializeMaxDate():Date {
+private function initializeMaxDate():Date {
 	var maxDate:Date = new Date(0);
 	for each (var mev:MusicEvent in _events) {
 		if (mev.getStartTime() != null && maxDate.valueOf() < mev.getStartTime().valueOf()) {
@@ -122,7 +125,7 @@ public function initializeMaxDate():Date {
 	return maxDate;
 }
 
-public function initializeMinDate():Date {
+private function initializeMinDate():Date {
 	var minDate:Date = new Date(2199, 12, 31, 0, 0, 0);
 	for each (var mev:MusicEvent in _events) {
 		if (mev.getStartTime() != null && minDate.valueOf() > mev.getStartTime().valueOf()) {
@@ -130,6 +133,34 @@ public function initializeMinDate():Date {
 		}
 	}
 	return minDate;
+}
+
+private function initializePrices():void {
+	_minPrice = initializeMinPrice();
+	_maxPrice = initializeMaxPrice();
+	initializeSelectedPrices();
+}
+
+private function initializeMinPrice():Number {
+	var minPrice:Number = 1000;
+	for each (var mev:MusicEvent in _events) {
+		if (mev.getPrice() >= 0 &&
+		    minPrice > mev.getPrice()) {
+			minPrice = mev.getPrice();
+		}
+	}
+	return minPrice;
+}
+
+private function initializeMaxPrice():Number {
+	var maxPrice:Number = -10;
+	for each (var mev:MusicEvent in _events) {
+		if (mev.getPrice() >= 0 &&
+		    maxPrice < mev.getPrice()) {
+			maxPrice = mev.getPrice();
+		}
+	}
+	return maxPrice;
 }
 
 public function getMinDate():Date {
@@ -144,6 +175,14 @@ public function getMaxDate():Date {
 		return _maxDate;
 	}
 	return null;
+}
+
+public function getMinPrice():Number {
+	return _minPrice;
+}
+
+public function getMaxPrice():Number {
+	return _maxPrice;
 }
 
 // yeah, why are we doing these loops every time?

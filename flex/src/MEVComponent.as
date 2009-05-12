@@ -2,6 +2,7 @@ package
 {
 	import mx.controls.Alert;
 	import mx.core.UIComponent;
+	import flash.events.MouseEvent;
 
 	public class MEVComponent extends UIComponent
 	{
@@ -9,17 +10,21 @@ package
 		public function MEVComponent(p_mev: MusicEvent) {
 			super();
 			mev = p_mev;
+
+			addEventListener(MouseEvent.MOUSE_OVER, handleHover);
+			addEventListener(MouseEvent.MOUSE_OUT, handleUnHover);
+			addEventListener(MouseEvent.CLICK, handleClick);
 		}
 
-		public function handleClick():void {
+		private function handleClick(event:MouseEvent):void {
 			Alert.show(mev.getEventName());
 		}
 		
-		public function handleHover():void {
+		private function handleHover(event:MouseEvent):void {
 			alpha = 1.8;
 		}
 		
-		public function handleUnHover():void {
+		private function handleUnHover(event:MouseEvent):void {
 			alpha = 1.0;
 		}
 		

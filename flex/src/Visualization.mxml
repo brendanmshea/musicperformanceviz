@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:dsc="com.dougmccune.controls.*"	layout="absolute" xmlns:ds="*" creationComplete="init()">
-	<mx:Script source="util.as"/>
 	<mx:Script source="controls.as"/>
 	<mx:Script source="data.as"/>
 

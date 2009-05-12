@@ -32,18 +32,7 @@ private function drawEventCircles(): void {
 
 private function drawEventCircle(mev: MusicEvent): void {
 
-  var circleSize:uint = randomNumber(2, 50); // e.getPrice();
-	var circleX:uint = scaleXToCanvas(mev, this.graph);
-	var circleY:uint = scaleYToCanvas(mev, this.graph);
+	var comp:MEVComponent = new MEVComponent(mev, this.graph);
 
-	var circle:Shape = new Shape();
-	circle.graphics.beginFill(0xFF0000, 0.5);
-	circle.graphics.drawCircle(circleX, circleY, circleSize);
-	circle.graphics.endFill();
-
-	var comp:MEVComponent = new MEVComponent(mev);
-
-	comp.addChild(circle);
-	this.graph.addChild(comp);
 }
 

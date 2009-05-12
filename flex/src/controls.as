@@ -1,4 +1,6 @@
 // ActionScript file
+import flash.events.Event;
+
 import mx.collections.ArrayCollection;
 import mx.controls.LinkButton;
 import mx.controls.Text;
@@ -6,6 +8,10 @@ import mx.managers.PopUpManager;
 
 private var _neighborhoodFilters:ArrayCollection = new ArrayCollection();
 private var _genreFilters:ArrayCollection = new ArrayCollection();
+private var _minSelectedDate:Date = new Date(0);
+private var _maxSelectedDate:Date = new Date(0);
+private var _minSelectedPrice:Number = 0;
+private var _maxSelectedPrice:Number = 0;
 
 private function recordNeighborhood(zip:String, selected:Boolean):void {
 	_neighborhoodFilters.addItem({zip:zip, selected:selected});
@@ -39,7 +45,21 @@ private function runAllFilters():void {
 				inGenre = true;
 			}
 		}
-		setDisplay(mev, (inZip && inGenre));
+		// Time filter.
+		var inTime:Boolean = false;
+		if (_minSelectedDate != null && _maxSelectedDate != null && mev.getStartTime() != null &&
+		    _minSelectedDate.valueOf() < mev.getStartTime().valueOf() &&
+		    _maxSelectedDate.valueOf() > mev.getStartTime().valueOf()) {
+			inTime = true;
+		}
+		// Price filter.
+		var inPrice:Boolean = false;
+		if (mev.getPrice() >= 0 &&
+		    _minSelectedPrice < mev.getPrice() &&
+		    _maxSelectedPrice > mev.getPrice()) {
+			inPrice = true;
+		}
+		setDisplay(mev, (inZip && inGenre && inTime && inPrice));
 	}
 }
 
@@ -120,16 +140,70 @@ private function getSliderLabels(amount:Number, numberOfLabels:Number):Array
 
 private function timeDataTipFunction(value:String):String
 {
-	return "The time is = " + Number(value).toPrecision(1);
+	return formatDate(calculateDateFromSlider(Number(value)));
 }
 
 private function priceDataTipFunction(value:String):String
 {
-	return "The price is " + Number(value).toPrecision(1);
+	return formatPrice(calculatePriceFromSlider(Number(value)));
 }
 
-private function catchSliderChangeEvent(event:Event, text1:Text, text2:Text):void
+private function timeSliderChangeEvent(event:Event, text1:Text, text2:Text):void
 {
-	text1.text = Number(event.target.values[0]).toPrecision(5);
-	text2.text = Number(event.target.values[1]).toPrecision(5);
+	_minSelectedDate = calculateDateFromSlider(event.target.values[0]);
+	_maxSelectedDate = calculateDateFromSlider(event.target.values[1]);
+	text1.text = formatDate(_minSelectedDate);
+	text2.text = formatDate(_maxSelectedDate);
+	runAllFilters();
+}
+
+private function priceSliderChangeEvent(event:Event, text1:Text, text2:Text):void
+{
+	_minSelectedPrice = calculatePriceFromSlider(event.target.values[0]);
+	_maxSelectedPrice = calculatePriceFromSlider(event.target.values[1]);
+	text1.text = formatPrice(_minSelectedPrice);
+	text2.text = formatPrice(_maxSelectedPrice);
+	runAllFilters();
+}
+
+private function calculateDateFromSlider(value:Number):Date {
+	// The slider goes from 0 to 100.  Figure out the date
+	// from the number given by scaling.
+	if (getMaxDate() != null && getMinDate() != null) {
+		var dateBits:Number = (getMaxDate().valueOf() - getMinDate().valueOf()) / 100.0;
+		return new Date(getMinDate().valueOf() + (dateBits * value));
+	}
+	return null;
+}
+
+private function calculatePriceFromSlider(value:Number):Number {
+	// The slider goes from 0 to 100.  Figure out the price
+	// from the number given by scaling.
+	var priceBits:Number = (getMaxPrice() - getMinPrice()) / 100.0;
+	return getMinPrice() + (priceBits * value);
+}
+
+private function initializeSelectedDates():void {
+	_minSelectedDate = calculateDateFromSlider(25);
+	_maxSelectedDate = calculateDateFromSlider(75);
+	minTimeSelected.text = formatDate(_minSelectedDate);
+	maxTimeSelected.text = formatDate(_maxSelectedDate);
+}
+
+private function initializeSelectedPrices():void {
+	_minSelectedPrice = calculatePriceFromSlider(25);
+	_maxSelectedPrice = calculatePriceFromSlider(75);
+	minPriceSelected.text = formatPrice(_minSelectedPrice);
+	maxPriceSelected.text = formatPrice(_maxSelectedPrice);
+}
+
+private function formatDate(date:Date):String {
+	if (date == null) {
+		return "";
+	}
+	return date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+}
+
+private function formatPrice(price:Number):String {
+	return "$" + price;
 }

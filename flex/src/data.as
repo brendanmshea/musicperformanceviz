@@ -1,9 +1,9 @@
 import flash.events.Event;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
-import mx.utils.StringUtil;
 
 import mx.collections.ArrayCollection;
+import mx.utils.StringUtil;
 
 // Contains all of our music events.  Doesn't change after being loaded.
 // However, the event itself keeps track of whether it is 'displayed'
@@ -39,12 +39,17 @@ private var _neighborhoodsInData:Array = new Array();
 private var _neighborhoodsForControls:ArrayCollection = new ArrayCollection();
 private var _genres:Array = new Array();
 private var _genresForControls:ArrayCollection = new ArrayCollection();
+private var _minDate:Date = new Date(0);
+private var _maxDate:Date = new Date(0);
+private var _minPrice:Number = 0;
+private var _maxPrice:Number = 0;
+private var _dataInitialized:Boolean = false;
 
 public function init():void {
 	trace("init called");
 	var loader:URLLoader = new URLLoader();
     loader.addEventListener(Event.COMPLETE, completeHandler);
-	var request:URLRequest = new URLRequest("data.tsv");
+	var request:URLRequest = new URLRequest("enriched.tsv");
 	try {
 		loader.load(request);
 	} catch (error:Error) {
@@ -60,6 +65,9 @@ private function completeHandler(event:Event):void {
 	initializeNeighborhoods();
 	initializeGenres();
 	initializeMap(getMiddleLat(), getMiddleLong(), _events);
+	initializeDates();
+	initializePrices();
+	_dataInitialized = true;
 	trace("completeHandler done");
 }
 
@@ -71,10 +79,8 @@ private function parseData( result:Object ):void {
 		// Skip the first line, which is titles.
 		if (!firstLine) {
 			var fields:Array = line.split("\t");
-			// Event Name	Start Time	End Time	Latitude	Longitude	Venue Name	Street	City	Region	Postalcode	Country	Price	URL	Type	
-
-			var venue:Venue = new Venue(fields[5], fields[6], fields[7], fields[8], fields[9], fields[10], parseFloat(fields[3]), parseFloat(fields[4]));
-			_events.push(new MusicEvent(fields[0], fields[0], fields[1], fields[2], venue, fields[11], fields[12], fields[13]));
+			var venue:Venue = new Venue(fields[7], fields[8], fields[9], fields[10], fields[11], fields[12], parseFloat(fields[5]), parseFloat(fields[6]));
+			_events.push(new MusicEvent(fields[0], fields[2], fields[3], fields[4], venue, fields[13], fields[15], fields[16]));
 		} else {
 			firstLine = false;
 		}
@@ -101,6 +107,82 @@ private function initializeGenres():void {
 			_genres[mev.getType()] = mev.getType();
 		}
 	}
+}
+
+private function initializeDates():void {
+	_minDate = initializeMinDate();
+	_maxDate = initializeMaxDate();
+	initializeSelectedDates();
+}
+
+private function initializeMaxDate():Date {
+	var maxDate:Date = new Date(0);
+	for each (var mev:MusicEvent in _events) {
+		if (mev.getStartTime() != null && maxDate.valueOf() < mev.getStartTime().valueOf()) {
+			maxDate = mev.getStartTime();
+		}
+	}
+	return maxDate;
+}
+
+private function initializeMinDate():Date {
+	var minDate:Date = new Date(2199, 12, 31, 0, 0, 0);
+	for each (var mev:MusicEvent in _events) {
+		if (mev.getStartTime() != null && minDate.valueOf() > mev.getStartTime().valueOf()) {
+			minDate = mev.getStartTime();
+		}
+	}
+	return minDate;
+}
+
+private function initializePrices():void {
+	_minPrice = initializeMinPrice();
+	_maxPrice = initializeMaxPrice();
+	initializeSelectedPrices();
+}
+
+private function initializeMinPrice():Number {
+	var minPrice:Number = 1000;
+	for each (var mev:MusicEvent in _events) {
+		if (mev.getPrice() >= 0 &&
+		    minPrice > mev.getPrice()) {
+			minPrice = mev.getPrice();
+		}
+	}
+	return minPrice;
+}
+
+private function initializeMaxPrice():Number {
+	var maxPrice:Number = -10;
+	for each (var mev:MusicEvent in _events) {
+		if (mev.getPrice() >= 0 &&
+		    maxPrice < mev.getPrice()) {
+			maxPrice = mev.getPrice();
+		}
+	}
+	return maxPrice;
+}
+
+public function getMinDate():Date {
+	if (_dataInitialized) {
+		return _minDate;
+	}
+	return null;
+}
+
+public function getMaxDate():Date {
+	if (_dataInitialized) {
+		return _maxDate;
+	}
+	return null;
+}
+
+public function getMinPrice():Number {
+	return _minPrice;
+}
+
+public function getMaxPrice():Number {
+	return _maxPrice;
 }
 
 // yeah, why are we doing these loops every time?

@@ -43,7 +43,14 @@ private function runAllFilters():void {
 				inGenre = true;
 			}
 		}
-		setDisplay(mev, (inZip && inGenre));
+		// Time filter.
+		var inTime:Boolean = false;
+		if (_minSelectedDate != null && _maxSelectedDate != null && mev.getStartTime() != null &&
+		    _minSelectedDate.valueOf() < mev.getStartTime().valueOf() &&
+		    _maxSelectedDate.valueOf() > mev.getStartTime().valueOf()) {
+			inTime = true;
+		}
+		setDisplay(mev, (inZip && inGenre && inTime));
 	}
 }
 
@@ -138,6 +145,7 @@ private function timeSliderChangeEvent(event:Event, text1:Text, text2:Text):void
 	_maxSelectedDate = calculateDateFromSlider(event.target.values[1]);
 	text1.text = formatDate(_minSelectedDate);
 	text2.text = formatDate(_maxSelectedDate);
+	runAllFilters();
 }
 
 private function priceSliderChangeEvent(event:Event, text1:Text, text2:Text):void
@@ -154,6 +162,13 @@ private function calculateDateFromSlider(value:Number):Date {
 		return new Date(getMinDate().valueOf() + (dateBits * value));
 	}
 	return null;
+}
+
+private function initializeSelectedDates():void {
+	_minSelectedDate = calculateDateFromSlider(25);
+	_maxSelectedDate = calculateDateFromSlider(75);
+	minTimeSelected.text = formatDate(_minSelectedDate);
+	maxTimeSelected.text = formatDate(_maxSelectedDate);
 }
 
 private function formatDate(date:Date):String {

@@ -111,6 +111,7 @@ private function initializeGenres():void {
 private function initializeDates():void {
 	_minDate = initializeMinDate();
 	_maxDate = initializeMaxDate();
+	initializeSelectedDates();
 }
 
 public function initializeMaxDate():Date {

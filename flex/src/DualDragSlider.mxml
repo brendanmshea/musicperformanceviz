@@ -362,7 +362,8 @@
 			}
 			//call a final measure for the grab box to make sure it's x position and width exactly match our final thumb drag positions
 			measureSliderBox();
-					
+
+			this.dispatchEvent(new Event("sliderChange", true));
 		}
 		
 		//-------------------------------------------------------------------------
@@ -462,7 +463,7 @@
 				
 				theSlider.executeBindings(true);
 				measureSliderBox();
-				this.dispatchEvent(new Event("sliderChange", true));
+				//this.dispatchEvent(new Event("sliderChange", true));
 			}
 		}
 		

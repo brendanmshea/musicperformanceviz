@@ -1,9 +1,9 @@
 import flash.events.Event;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
-import mx.utils.StringUtil;
 
 import mx.collections.ArrayCollection;
+import mx.utils.StringUtil;
 
 // Contains all of our music events.  Doesn't change after being loaded.
 // However, the event itself keeps track of whether it is 'displayed'
@@ -39,6 +39,9 @@ private var _neighborhoodsInData:Array = new Array();
 private var _neighborhoodsForControls:ArrayCollection = new ArrayCollection();
 private var _genres:Array = new Array();
 private var _genresForControls:ArrayCollection = new ArrayCollection();
+private var _minDate:Date = new Date(0);
+private var _maxDate:Date = new Date(0);
+private var _dataInitialized:Boolean = false;
 
 public function init():void {
 	trace("init called");
@@ -60,6 +63,8 @@ private function completeHandler(event:Event):void {
 	initializeNeighborhoods();
 	initializeGenres();
 	initializeMap(getMiddleLat(), getMiddleLong(), _events);
+	initializeDates();
+	_dataInitialized = true;
 	trace("completeHandler done");
 }
 
@@ -101,6 +106,45 @@ private function initializeGenres():void {
 			_genres[mev.getType()] = mev.getType();
 		}
 	}
+}
+
+private function initializeDates():void {
+	_minDate = initializeMinDate();
+	_maxDate = initializeMaxDate();
+}
+
+public function initializeMaxDate():Date {
+	var maxDate:Date = new Date(0);
+	for each (var mev:MusicEvent in _events) {
+		if (mev.getStartTime() != null && maxDate.valueOf() < mev.getStartTime().valueOf()) {
+			maxDate = mev.getStartTime();
+		}
+	}
+	return maxDate;
+}
+
+public function initializeMinDate():Date {
+	var minDate:Date = new Date(2199, 12, 31, 0, 0, 0);
+	for each (var mev:MusicEvent in _events) {
+		if (mev.getStartTime() != null && minDate.valueOf() > mev.getStartTime().valueOf()) {
+			minDate = mev.getStartTime();
+		}
+	}
+	return minDate;
+}
+
+public function getMinDate():Date {
+	if (_dataInitialized) {
+		return _minDate;
+	}
+	return null;
+}
+
+public function getMaxDate():Date {
+	if (_dataInitialized) {
+		return _maxDate;
+	}
+	return null;
 }
 
 // yeah, why are we doing these loops every time?

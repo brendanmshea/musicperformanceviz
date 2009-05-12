@@ -1,11 +1,10 @@
 package {
 public class MusicEvent {
-  private static var _allEvents:Array = new Array();
-
   private var _id:String;
   private var _eventName:String;
-  private var _startTime:String;
-  private var _endTime:String;
+  private var _rawStartTime:String;
+  private var _rawEndTime:String;
+  private var _startTime:Date;
   private var _venue:Venue;
   private var _price:String;
   private var _url:String;
@@ -15,16 +14,16 @@ public class MusicEvent {
   public function MusicEvent( id:String, eventName:String, startTime:String, endTime:String, venue:Venue, price:String, url:String, type:String) {
     _id = id;
     _eventName = eventName;
-    _startTime = startTime;
-    _endTime = endTime;
+    _rawStartTime = startTime;
+    _rawEndTime = endTime;
     _venue = venue;
     _price = price;
     _url = url;
     _type=type;
     // Initialize display to false.
     _display = false;
-
-    _allEvents.push(this);
+    // Parse the dates.
+    _startTime = parseDate(_rawStartTime);
 }
   public function getId( ):String {
     return _id;
@@ -32,11 +31,11 @@ public class MusicEvent {
   public function getEventName( ):String {
     return _eventName;
   }
-  public function getStartTime( ):String {
-    return _startTime;
+  public function getRawStartTime( ):String {
+    return _rawStartTime;
   }
-  public function getEndTime( ):String {
-    return _endTime;
+  public function getRawEndTime( ):String {
+    return _rawEndTime;
   }
   public function getVenue( ):Venue {
     return _venue;
@@ -51,48 +50,9 @@ public class MusicEvent {
     return _type;
   }
 
-  public static function getAllEvents( ):Array {
-    return _allEvents;
-  }
-
-  // yeah, why are we doing these loops every time?
-  // Because premature optimization... etc.
-  public static function getMaxLat( ):Number {
-    var maxLat:Number = -500.0;
-    for each ( var mev:MusicEvent in getAllEvents() ) {
-        if (maxLat < mev.getVenue().getLat()) {
-          maxLat = mev.getVenue().getLat();
-        }
-      }
-    return maxLat;
-  }
-  public static function getMinLat( ):Number {
-    var minLat:Number = 500.0;
-    for each ( var mev:MusicEvent in getAllEvents() ) {
-        if (minLat > mev.getVenue().getLat()) {
-          minLat = mev.getVenue().getLat();
-        }
-      }
-    return minLat;
-  }
-  public static function getMaxLong( ):Number {
-    var maxLong:Number = -500.0;
-    for each ( var mev:MusicEvent in getAllEvents() ) {
-        if (maxLong < mev.getVenue().getLat()) {
-          maxLong = mev.getVenue().getLat();
-        }
-      }
-    return maxLong;
-  }
-  public static function getMinLong( ):Number {
-    var minLong:Number = 500.0;
-    for each ( var mev:MusicEvent in getAllEvents() ) {
-        if (minLong > mev.getVenue().getLat()) {
-          minLong = mev.getVenue().getLat();
-        }
-      }
-    return minLong;
-  }
+	public function getStartTime():Date {
+		return _startTime;
+	}
 
 	public function getDisplay():Boolean {
 		return _display;
@@ -104,6 +64,28 @@ public class MusicEvent {
 
 	public function toString():String {
 		return "MusicEvent: id " + _id + ", event name: " + _eventName;
+	}
+
+	public function parseDate(rawDate:String):Date {
+		if (rawDate == null || rawDate == "") {
+			return null;
+		}
+		var components:Array = rawDate.split(" ");
+		if (components == null || components.length < 2) {
+			return null;
+		}
+		var date:String = components[0];
+		var time:String = components[1];
+		var dateComponents:Array = date.split("-");
+		var timeComponents:Array = time.split(":");
+		if (dateComponents == null || dateComponents.length < 3) {
+			return null;
+		}
+		if (timeComponents == null || timeComponents.length < 3) {
+			return null;
+		}
+		return new Date(Number(dateComponents[0]), Number(dateComponents[1]), Number(dateComponents[2]),
+		                Number(timeComponents[0]), Number(timeComponents[1]), Number(timeComponents[2]));
 	}
 }
 }

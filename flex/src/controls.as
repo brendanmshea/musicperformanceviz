@@ -1,4 +1,6 @@
 // ActionScript file
+import flash.events.Event;
+
 import mx.collections.ArrayCollection;
 import mx.controls.LinkButton;
 import mx.controls.Text;
@@ -6,6 +8,8 @@ import mx.managers.PopUpManager;
 
 private var _neighborhoodFilters:ArrayCollection = new ArrayCollection();
 private var _genreFilters:ArrayCollection = new ArrayCollection();
+private var _minSelectedDate:Date = new Date(0);
+private var _maxSelectedDate:Date = new Date(0);
 
 private function recordNeighborhood(zip:String, selected:Boolean):void {
 	_neighborhoodFilters.addItem({zip:zip, selected:selected});
@@ -120,7 +124,7 @@ private function getSliderLabels(amount:Number, numberOfLabels:Number):Array
 
 private function timeDataTipFunction(value:String):String
 {
-	return "The time is = " + Number(value).toPrecision(1);
+	return formatDate(calculateDateFromSlider(Number(value)));
 }
 
 private function priceDataTipFunction(value:String):String
@@ -128,8 +132,33 @@ private function priceDataTipFunction(value:String):String
 	return "The price is " + Number(value).toPrecision(1);
 }
 
-private function catchSliderChangeEvent(event:Event, text1:Text, text2:Text):void
+private function timeSliderChangeEvent(event:Event, text1:Text, text2:Text):void
 {
-	text1.text = Number(event.target.values[0]).toPrecision(5);
-	text2.text = Number(event.target.values[1]).toPrecision(5);
+	_minSelectedDate = calculateDateFromSlider(event.target.values[0]);
+	_maxSelectedDate = calculateDateFromSlider(event.target.values[1]);
+	text1.text = formatDate(_minSelectedDate);
+	text2.text = formatDate(_maxSelectedDate);
+}
+
+private function priceSliderChangeEvent(event:Event, text1:Text, text2:Text):void
+{
+	text1.text = Number(event.target.values[0]).toPrecision(2);
+	text2.text = Number(event.target.values[1]).toPrecision(2);
+}
+
+private function calculateDateFromSlider(value:Number):Date {
+	// The slider goes from 0 to 100.  Figure out the date
+	// from the number given by scaling.
+	if (getMaxDate() != null && getMinDate() != null) {
+		var dateBits:Number = (getMaxDate().valueOf() - getMinDate().valueOf()) / 100.0;
+		return new Date(getMinDate().valueOf() + (dateBits * value));
+	}
+	return null;
+}
+
+private function formatDate(date:Date):String {
+	if (date == null) {
+		return "";
+	}
+	return date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
 }

@@ -31,16 +31,38 @@
 		                   showDataTip="true"
 		                   dragSliderColor="0x0033CC"
 		                   minimum="0" maximum="100"
-		                   dataTipFormatFunction="{tmpDataTipFunction}"
+		                   dataTipFormatFunction="{timeDataTipFunction}"
 		                   sliderLabels="{getSliderLabels(Math.abs(timeSlider.maximum - timeSlider.minimum), timeSlider.numberOfLabels)}"
-		                   sliderChange="catchSliderChangeEvent(event)"
+		                   sliderChange="catchSliderChangeEvent(event, minTimeSelected, maxTimeSelected)"
 		                   />
 		<mx:HBox>
-            <mx:Text id="text1" text="25"/>
-            <mx:Text id="text2" text="75"/>
+            <mx:Text id="minTimeSelected" text="25"/>
+            <mx:Text id="maxTimeSelected" text="75"/>
 		</mx:HBox>
 	</mx:VBox>
-                        
+
+	<!-- Price slider. -->
+	<mx:Metadata>
+		[Event("sliderChange")]
+	</mx:Metadata>
+	<mx:VBox x="40" y="540" width="400" height="150" verticalAlign="middle" horizontalAlign="center">
+		<ds:DualDragSlider id="priceSlider"
+		                   width="400"
+		                   values="[25, 75]"
+		                   numberOfLabels="5"
+		                   showDataTip="true"
+		                   dragSliderColor="0x0033CC"
+		                   minimum="0" maximum="100"
+		                   dataTipFormatFunction="{priceDataTipFunction}"
+		                   sliderLabels="{getSliderLabels(Math.abs(priceSlider.maximum - priceSlider.minimum), priceSlider.numberOfLabels)}"
+		                   sliderChange="catchSliderChangeEvent(event, minPriceSelected, maxPriceSelected)"
+		                   />
+		<mx:HBox>
+            <mx:Text id="minPriceSelected" text="25"/>
+            <mx:Text id="maxPriceSelected" text="75"/>
+		</mx:HBox>
+	</mx:VBox>
+
 	<!-- Neighborhood selector.  -->
 	<mx:HBox x="480" y="485">
 		<mx:LinkButton id="neighborhoods" label="Neighborhoods" 

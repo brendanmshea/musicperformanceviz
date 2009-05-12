@@ -117,15 +117,18 @@ private function getSliderLabels(amount:Number, numberOfLabels:Number):Array
 	}
 	return tmpArray;
 }
-            
-//sample dataTip function which is passed in to be used as our slider dataTipFunction
-private function tmpDataTipFunction(value:String):String
+
+private function timeDataTipFunction(value:String):String
 {
-	return "The Value = " + Number(value).toPrecision(5);
+	return "The time is = " + Number(value).toPrecision(1);
 }
-            
-//sample function which catches the sliderChange event when the thumb values are updated in the dual-slider component
-private function catchSliderChangeEvent(event:Event):void
+
+private function priceDataTipFunction(value:String):String
+{
+	return "The price is " + Number(value).toPrecision(1);
+}
+
+private function catchSliderChangeEvent(event:Event, text1:Text, text2:Text):void
 {
 	text1.text = Number(event.target.values[0]).toPrecision(5);
 	text2.text = Number(event.target.values[1]).toPrecision(5);

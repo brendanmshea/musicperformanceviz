@@ -5,6 +5,7 @@ import com.google.maps.controls.PositionControl;
 import com.google.maps.controls.ZoomControl;
 import com.google.maps.overlays.Marker;
 import com.google.maps.overlays.MarkerOptions;
+import com.google.maps.styles.FillStyle;
 
 import flash.utils.Dictionary;
 
@@ -20,11 +21,12 @@ private function onMapReady(event:Event):void {
 	this.map.addControl(new PositionControl());
 	_mappedMarkers = new Dictionary();
 	for each (var mev:MusicEvent in _musicEvents) {
-		trace("venue is " + mev.getVenue());
-		trace("venue.getLat is " + mev.getVenue().getLat());
-		trace("venue.getLong is " + mev.getVenue().getLong());
+		var color:int = 0x000000;
+		if (mev.getType() in _genreColors) {
+			color = _genreColors[mev.getType()];
+		}
 		_mappedMarkers[mev.getId()] = new Marker(new LatLng(mev.getVenue().getLat(), mev.getVenue().getLong()),
-		                              new MarkerOptions({hasShadow: true}));
+		                              new MarkerOptions({hasShadow: true, fillStyle: new FillStyle({color: color})}));
 		// In case the display property is already enabled, display the event.
 		if (mev.getDisplay()) {
 			this.map.addOverlay(_mappedMarkers[mev.getId()]);

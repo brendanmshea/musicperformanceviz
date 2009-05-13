@@ -35,6 +35,16 @@ private var _neighborhoods:Object = {
 
                                      }
 
+private var _genreColors:Object = {
+	                               "Techno & Dance":0x33CC33,
+	                               "Music":0x3333FF,
+	                               "Folk":0xFF0066,
+	                               "Gospel":0xCCCC99,
+	                               "Pop":0x99FF99,
+	                               "Theater":0x993333
+
+}
+
 private var _neighborhoodsInData:Array = new Array();
 private var _neighborhoodsForControls:ArrayCollection = new ArrayCollection();
 private var _genres:Array = new Array();

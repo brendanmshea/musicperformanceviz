@@ -31,11 +31,10 @@
 		                   minimum="0" maximum="100"
 		                   dataTipFormatFunction="{timeDataTipFunction}"
 		                   sliderLabels="{getSliderLabels(Math.abs(timeSlider.maximum - timeSlider.minimum), timeSlider.numberOfLabels)}"
-		                   sliderChange="timeSliderChangeEvent(event, minTimeSelected, maxTimeSelected)"
+		                   sliderChange="timeSliderChangeEvent(event)"
 		                   />
 		<mx:HBox>
-            <mx:Text id="minTimeSelected" text=""/>
-            <mx:Text id="maxTimeSelected" text=""/>
+            <mx:Text id="timeSelected" text=""/>
 		</mx:HBox>
 	</mx:VBox>
 
@@ -53,11 +52,10 @@
 		                   minimum="0" maximum="100"
 		                   dataTipFormatFunction="{priceDataTipFunction}"
 		                   sliderLabels="{getSliderLabels(Math.abs(priceSlider.maximum - priceSlider.minimum), priceSlider.numberOfLabels)}"
-		                   sliderChange="priceSliderChangeEvent(event, minPriceSelected, maxPriceSelected)"
+		                   sliderChange="priceSliderChangeEvent(event)"
 		                   />
 		<mx:HBox>
-            <mx:Text id="minPriceSelected" text=""/>
-            <mx:Text id="maxPriceSelected" text=""/>
+            <mx:Text id="priceSelected" text=""/>
 		</mx:HBox>
 	</mx:VBox>
 

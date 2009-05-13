@@ -125,17 +125,8 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
 //basic function to create the labels for our slider based on minimum and maximum values of slider, and number of labels to show
 private function getSliderLabels(amount:Number, numberOfLabels:Number):Array
 {
-	var interval:Number = amount / (numberOfLabels - 1);
 	var tmpArray:Array = new Array();
-	var labelCounter:Number = timeSlider.minimum; 
-	var loopCounter:Number = 0;
-
-	while(loopCounter <= amount)
-	{
-		tmpArray.push(Math.round(labelCounter));
-		labelCounter += interval;
-		loopCounter += interval;
-	}
+	tmpArray.push("");
 	return tmpArray;
 }
 
@@ -149,21 +140,19 @@ private function priceDataTipFunction(value:String):String
 	return formatPrice(calculatePriceFromSlider(Number(value)));
 }
 
-private function timeSliderChangeEvent(event:Event, text1:Text, text2:Text):void
+private function timeSliderChangeEvent(event:Event):void
 {
 	_minSelectedDate = calculateDateFromSlider(event.target.values[0]);
 	_maxSelectedDate = calculateDateFromSlider(event.target.values[1]);
-	text1.text = formatDate(_minSelectedDate);
-	text2.text = formatDate(_maxSelectedDate);
+	timeSelected.text = "Time: from " + formatDate(_minSelectedDate) + " to " + formatDate(_maxSelectedDate);
 	runAllFilters();
 }
 
-private function priceSliderChangeEvent(event:Event, text1:Text, text2:Text):void
+private function priceSliderChangeEvent(event:Event):void
 {
 	_minSelectedPrice = calculatePriceFromSlider(event.target.values[0]);
 	_maxSelectedPrice = calculatePriceFromSlider(event.target.values[1]);
-	text1.text = formatPrice(_minSelectedPrice);
-	text2.text = formatPrice(_maxSelectedPrice);
+	priceSelected.text = "Price: from " + formatPrice(_minSelectedPrice) + " to " + formatPrice(_maxSelectedPrice);
 	runAllFilters();
 }
 
@@ -187,15 +176,13 @@ private function calculatePriceFromSlider(value:Number):Number {
 private function initializeSelectedDates():void {
 	_minSelectedDate = calculateDateFromSlider(25);
 	_maxSelectedDate = calculateDateFromSlider(75);
-	minTimeSelected.text = formatDate(_minSelectedDate);
-	maxTimeSelected.text = formatDate(_maxSelectedDate);
+	timeSelected.text = "Time: from " + formatDate(_minSelectedDate) + " to " + formatDate(_maxSelectedDate);
 }
 
 private function initializeSelectedPrices():void {
 	_minSelectedPrice = calculatePriceFromSlider(25);
 	_maxSelectedPrice = calculatePriceFromSlider(75);
-	minPriceSelected.text = formatPrice(_minSelectedPrice);
-	maxPriceSelected.text = formatPrice(_maxSelectedPrice);
+	priceSelected.text = "Price: from " + formatPrice(_minSelectedPrice) + " to " + formatPrice(_maxSelectedPrice);
 }
 
 private function formatDate(date:Date):String {

@@ -23,7 +23,7 @@
 		    		snapInterval="0"
 		    		thumbCount="2"
 		    		labels="{sliderLabels}" 
-		    		tickInterval="{Math.abs(maximum - minimum) / (numberOfLabels - 1)}" 
+		    		tickInterval="0" 
 		    		allowTrackClick="true" 
 		    		liveDragging="true"
 		    		change="sliderChange(event)"

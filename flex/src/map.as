@@ -1,6 +1,8 @@
 // ActionScript file
 import com.google.maps.LatLng;
 import com.google.maps.MapType;
+import com.google.maps.controls.PositionControl;
+import com.google.maps.controls.ZoomControl;
 import com.google.maps.overlays.Marker;
 import com.google.maps.overlays.MarkerOptions;
 
@@ -14,6 +16,8 @@ private var _mappedMarkers:Dictionary;
 
 private function onMapReady(event:Event):void {
 	this.map.setCenter(new LatLng(_middleLat, _middleLong), 13, MapType.NORMAL_MAP_TYPE);
+	this.map.addControl(new ZoomControl());
+	this.map.addControl(new PositionControl());
 	_mappedMarkers = new Dictionary();
 	for each (var mev:MusicEvent in _musicEvents) {
 		trace("venue is " + mev.getVenue());

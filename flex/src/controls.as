@@ -189,7 +189,23 @@ private function formatDate(date:Date):String {
 	if (date == null) {
 		return "";
 	}
-	return date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+	var amOrPm:String = "AM";
+	var hours:String = String(date.getHours());
+	var minutes:String = String(date.getMinutes());
+	if (date.getHours() > 12) {
+		hours = String(date.getHours() - 12);
+		amOrPm = "PM";
+	}
+	if (date.getHours() == 0) {
+		hours = "12";
+	}
+	if (date.getMinutes() == 0) {
+		minutes = "00";
+	}
+	if (date.getMinutes() >= 1 && date.getMinutes() <= 9) {
+		minutes = "0" + String(date.getMinutes());
+	}
+	return date.getMonth() + "/" + date.getDate() + " " + hours + ":" + minutes + " " + amOrPm;
 }
 
 private function formatPrice(price:Number):String {

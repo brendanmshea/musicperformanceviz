@@ -206,5 +206,27 @@ private function formatDate(date:Date):String {
 }
 
 private function formatPrice(price:Number):String {
-	return "$" + price;
+	var decimalPl:Number = 2;
+	var currencySymbol:String = "$";
+	var decimalDelim:String = ".";
+
+ 	// Split the number into the whole and decimal (fractional) portions.
+	var parts:Array = String(price).split(".");
+
+	// Truncate or round the decimal portion, as directed.
+    parts[1] = String(parts[1]).substr(0, 2);
+
+	// Ensure that the decimal portion has the number of digits indicated. 
+	// Requires the zeroFill(  ) method defined in Recipe 5.4.
+	if (Number(parts[1]) < 10 && Number(parts[1]) > 0) {
+		parts[1] = parts[1] + "0";
+	}
+	if (Number(parts[1]) == 0 || parts[1] == "NaN" || parts[1] == "un") {
+		parts[1] = "00";
+	}
+
+	// Add a currency symbol and use String.join(  ) to merge the whole (dollar)
+	// and decimal (cents) portions using the designated decimal delimiter.
+	var output:String = currencySymbol + parts.join(decimalDelim);
+	return output;
 }

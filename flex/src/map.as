@@ -1,5 +1,8 @@
 // ActionScript file
+import com.google.maps.InfoWindowOptions;
 import com.google.maps.LatLng;
+import com.google.maps.Map;
+import com.google.maps.MapMouseEvent;
 import com.google.maps.MapType;
 import com.google.maps.controls.PositionControl;
 import com.google.maps.controls.ZoomControl;
@@ -7,6 +10,7 @@ import com.google.maps.overlays.Marker;
 import com.google.maps.overlays.MarkerOptions;
 import com.google.maps.styles.FillStyle;
 
+import flash.events.Event;
 import flash.utils.Dictionary;
 
 private var _middleLat:Number;
@@ -21,18 +25,30 @@ private function onMapReady(event:Event):void {
 	this.map.addControl(new PositionControl());
 	_mappedMarkers = new Dictionary();
 	for each (var mev:MusicEvent in _musicEvents) {
-		var color:int = 0x000000;
-		if (mev.getType() in _genreColors) {
-			color = _genreColors[mev.getType()];
-		}
-		_mappedMarkers[mev.getId()] = new Marker(new LatLng(mev.getVenue().getLat(), mev.getVenue().getLong()),
-		                              new MarkerOptions({hasShadow: true, fillStyle: new FillStyle({color: color})}));
+		_mappedMarkers[mev.getId()] = createMarker(mev);
 		// In case the display property is already enabled, display the event.
 		if (mev.getDisplay()) {
 			this.map.addOverlay(_mappedMarkers[mev.getId()]);
 		}
 	}
 	_isReady = true;
+}
+
+public function createMarker(mev:MusicEvent):Marker {
+	var color:int = 0x000000;
+	if (mev.getType() in _genreColors) {
+		color = _genreColors[mev.getType()];
+	}
+	var latLng:LatLng = new LatLng(mev.getVenue().getLat(), mev.getVenue().getLong())
+	var marker:Marker = new Marker(latLng,
+	                    new MarkerOptions({clickable: true, hasShadow: true, fillStyle: new FillStyle({color: color})}));
+	marker.addEventListener(MapMouseEvent.CLICK, function(e:MapMouseEvent):void {
+		var title:String = mev.getEventName();
+   		var content:String = "Price: " + formatPrice(mev.getPrice()) + "\n" +
+   		                       "Venue: " + mev.getVenue().getVenue();
+		marker.openInfoWindow(new InfoWindowOptions({title: title, content:content}));
+	});
+	return marker;
 }
 
 public function initializeMap(middleLat:Number, middleLong:Number, musicEvents:Array):void {

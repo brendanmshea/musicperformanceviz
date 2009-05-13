@@ -48,15 +48,15 @@ private function runAllFilters():void {
 		// Time filter.
 		var inTime:Boolean = false;
 		if (_minSelectedDate != null && _maxSelectedDate != null && mev.getStartTime() != null &&
-		    _minSelectedDate.valueOf() < mev.getStartTime().valueOf() &&
-		    _maxSelectedDate.valueOf() > mev.getStartTime().valueOf()) {
+		    _minSelectedDate.valueOf() <= mev.getStartTime().valueOf() &&
+		    _maxSelectedDate.valueOf() >= mev.getStartTime().valueOf()) {
 			inTime = true;
 		}
 		// Price filter.
 		var inPrice:Boolean = false;
 		if (mev.getPrice() >= 0 &&
-		    _minSelectedPrice < mev.getPrice() &&
-		    _maxSelectedPrice > mev.getPrice()) {
+		    _minSelectedPrice <= mev.getPrice() &&
+		    _maxSelectedPrice >= mev.getPrice()) {
 			inPrice = true;
 		}
 		setDisplay(mev, (inZip && inGenre && inTime && inPrice));
@@ -66,11 +66,12 @@ private function runAllFilters():void {
 private function setDisplay(mev:MusicEvent, selected:Boolean):void {
 	if (mev.getDisplay() == false && selected) {
 		showOnMap(mev);
-		drawEventCircle(mev);
+		mev.showGraphItem(graph);
 		mev.setDisplay(true);
 	}
 	if (mev.getDisplay() == true && !selected) {
 		hideOnMap(mev);
+		mev.hideGraphItem();
 		mev.setDisplay(false);
 	}
 }

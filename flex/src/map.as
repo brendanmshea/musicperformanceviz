@@ -1,4 +1,4 @@
-// ActionScript file
+// Mapping methods.
 import com.google.maps.InfoWindowOptions;
 import com.google.maps.LatLng;
 import com.google.maps.Map;
@@ -13,12 +13,15 @@ import com.google.maps.styles.FillStyle;
 import flash.events.Event;
 import flash.utils.Dictionary;
 
-private var _middleLat:Number;
-private var _middleLong:Number;
-private var _isReady:Boolean = false;
-private var _musicEvents:Array;
-private var _mappedMarkers:Dictionary;
+private var _middleLat:Number; // Latitude for our map starting center.
+private var _middleLong:Number; // Longitude for our map starting center.
+private var _isReady:Boolean = false; // Indicate if our map is ready for use.
+private var _musicEvents:Array; // Our music events.
+private var _mappedMarkers:Dictionary; // Our music event markers.
 
+// Initialize our map, and all the markers for our events.
+// (The markers are then added or removed from the map
+// by the filters in controls.as.)
 private function onMapReady(event:Event):void {
 	this.map.setCenter(new LatLng(_middleLat, _middleLong), 13, MapType.NORMAL_MAP_TYPE);
 	this.map.addControl(new ZoomControl());
@@ -34,6 +37,7 @@ private function onMapReady(event:Event):void {
 	_isReady = true;
 }
 
+// Create a marker for a MusicEvent.
 public function createMarker(mev:MusicEvent):Marker {
 	var color:int = getGenreColor(mev.getType());
 	var latLng:LatLng = new LatLng(mev.getVenue().getLat(), mev.getVenue().getLong())
@@ -49,12 +53,14 @@ public function createMarker(mev:MusicEvent):Marker {
 	return marker;
 }
 
+// Initialize our map fields.
 public function initializeMap(middleLat:Number, middleLong:Number, musicEvents:Array):void {
 	_middleLat = middleLat;
 	_middleLong = middleLong;
 	_musicEvents = musicEvents;
 }
 
+// Show the marker for the given MusicEvent on the map.
 public function showOnMap(musicEvent:MusicEvent):void {
 	trace("showOnMap invoked for musicEvent " + musicEvent);
 	if (_isReady) {
@@ -62,6 +68,7 @@ public function showOnMap(musicEvent:MusicEvent):void {
 	}
 }
 
+// Hide the marker for the given MusicEvent from the map.
 public function hideOnMap(musicEvent:MusicEvent):void {
 	trace("hideOnMap invoked for musicEvent " + musicEvent);
 	if (_isReady) {

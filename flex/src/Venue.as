@@ -1,3 +1,4 @@
+// Bean to represent a venue.
 package {
 public class Venue {
 	private var _venue:String;

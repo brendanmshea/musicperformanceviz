@@ -1,3 +1,4 @@
+// Bean to represent a music event.
 package {
 import mx.containers.Canvas;
 public class MusicEvent {

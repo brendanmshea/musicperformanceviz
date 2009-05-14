@@ -35,10 +35,7 @@ private function onMapReady(event:Event):void {
 }
 
 public function createMarker(mev:MusicEvent):Marker {
-	var color:int = 0x000000;
-	if (mev.getType() in _genreColors) {
-		color = _genreColors[mev.getType()];
-	}
+	var color:int = getGenreColor(mev.getType());
 	var latLng:LatLng = new LatLng(mev.getVenue().getLat(), mev.getVenue().getLong())
 	var marker:Marker = new Marker(latLng,
 	                    new MarkerOptions({clickable: true, hasShadow: true, fillStyle: new FillStyle({color: color})}));

@@ -1,0 +1,154 @@
+<html>
+<head>
+<title>
+CS 171 - Final Project Writeup: Local Music Performances
+</title>
+<script src="AC_OETags.js" language="javascript"></script>
+
+<!--  BEGIN Browser History required section -->
+<script src="history/history.js" language="javascript"></script>
+<!--  END Browser History required section -->
+
+<script language="JavaScript" type="text/javascript">
+<!--
+// -----------------------------------------------------------------------------
+// Globals
+// Major version of Flash required
+var requiredMajorVersion = 9;
+// Minor version of Flash required
+var requiredMinorVersion = 0;
+// Minor version of Flash required
+var requiredRevision = 124;
+// -----------------------------------------------------------------------------
+// -->
+</script>
+</head>
+<body>
+<h1>CS 171 - Final Project Writeup: Local Music Performances</h1>
+<p>
+<address>Brendan Shea (bms6@cornell.edu) HUID 60650780</address>
+<address>Philipp Hanes (philipp.hanes@gmail.com) HUID 10632587</address>
+</p>
+This visualization tries to answer questions about Boston area music performances, such
+as:
+<ul>
+<li>Are performances of certain music genres more common in some neighborhoods than others?</li>
+<li>For a given time period, where can I find folk performances for less than $20?</li>
+</ul>
+The target audience is people who are interested in local music performances, and fans
+of music and live music performances in general.
+<br/>
+We chose these motivating questions as they are of interest to both of us, in addition to being
+generally interesting to others.
+<br/>
+<h3>Local Music Performances Visualization</h3>
+<script language="JavaScript" type="text/javascript">
+<!--
+// Version check for the Flash Player that has the ability to start Player Product Install (6.0r65)
+var hasProductInstall = DetectFlashVer(6, 0, 65);
+
+// Version check based upon the values defined in globals
+var hasRequestedVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
+
+if ( hasProductInstall && !hasRequestedVersion ) {
+	// DO NOT MODIFY THE FOLLOWING FOUR LINES
+	// Location visited after installation is complete if installation is required
+	var MMPlayerType = (isIE == true) ? "ActiveX" : "PlugIn";
+	var MMredirectURL = window.location;
+    document.title = document.title.slice(0, 47) + " - Flash Player Installation";
+    var MMdoctitle = document.title;
+
+	AC_FL_RunContent(
+		"src", "playerProductInstall",
+		"FlashVars", "MMredirectURL="+MMredirectURL+'&MMplayerType='+MMPlayerType+'&MMdoctitle='+MMdoctitle+"",
+		"width", "100%",
+		"height", "100%",
+		"align", "middle",
+		"id", "Visualization",
+		"quality", "high",
+		"bgcolor", "#869ca7",
+		"name", "Visualization",
+		"allowScriptAccess","sameDomain",
+		"type", "application/x-shockwave-flash",
+		"pluginspage", "http://www.adobe.com/go/getflashplayer"
+	);
+} else if (hasRequestedVersion) {
+	// if we've detected an acceptable version
+	// embed the Flash Content SWF when all tests are passed
+	AC_FL_RunContent(
+			"src", "Visualization",
+			"width", "100%",
+			"height", "100%",
+			"align", "middle",
+			"id", "Visualization",
+			"quality", "high",
+			"bgcolor", "#869ca7",
+			"name", "Visualization",
+			"allowScriptAccess","sameDomain",
+			"type", "application/x-shockwave-flash",
+			"pluginspage", "http://www.adobe.com/go/getflashplayer"
+	);
+  } else {  // flash is too old or we can't detect the plugin
+    var alternateContent = 'Alternate HTML content should be placed here. '
+  	+ 'This content requires the Adobe Flash Player. '
+   	+ '<a href=http://www.adobe.com/go/getflash/>Get Flash</a>';
+    document.write(alternateContent);  // insert non-flash content
+  }
+// -->
+</script>
+<noscript>
+  	<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+			id="Visualization" width="800" height="700"
+			codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
+			<param name="movie" value="Visualization.swf" />
+			<param name="quality" value="high" />
+			<param name="bgcolor" value="#869ca7" />
+			<param name="allowScriptAccess" value="sameDomain" />
+			<embed src="Visualization.swf" quality="high" bgcolor="#869ca7"
+				width="100%" height="100%" name="Visualization" align="middle"
+				play="true"
+				loop="false"
+				quality="high"
+				allowScriptAccess="sameDomain"
+				type="application/x-shockwave-flash"
+				pluginspage="http://www.adobe.com/go/getflashplayer">
+			</embed>
+	</object>
+</noscript>
+<h3>Use</h3>
+The visualization has two main parts:
+<ul>
+	<li>The view (on the top) shows either the Graph view of the data, or the Map view of the data, depending
+on which is selected.</li>
+	<li>The filters (on the bottom) allow you to filter data by time, price, genre and neighborhood.</li>
+</ul>
+By changing the filters, the data shown in the view will change to match.  You can therefore 'drill down' into
+a subset of the data that is of interest.
+<br/>
+<br/>
+The Graph view shows the data in an abstract representation -- location is encoded by position (the events are
+grouped by neighborhood), price is encoded by size, and genre is encoded by color.  Clicking on the event will
+show more detailed data about the event, including a link to the artist's allmusic.com page, if one exists.
+<br/>
+<br/>
+The Map view shows the same data, but now displayed on a map.  Location is of course encoded by position, and genre
+is encoded by color.  Similar to the Graph view, clicking on the event shows more detailed data.
+<h3>Data</h3>
+There are two primary sources of data that we used:
+<ul>
+	<li>www.boston.com- this is where we got all of the music events from, plus a bunch of supporting data</li> 
+	<li>www.allmusic.com - we used this to round out genre information, as well as get links</li>
+</ul>
+<h3>Insights</h3>
+Fill this in.
+<h3>Future Improvements</h3>
+Beyond general cleanup of the data quality (for instance, the 'Unknown' genre),
+it would be nice to have some richer mapping capabilities, like the ability to get directions
+from an address to an event.  Also, the time and price filters could show a 'histogram' of data as their 'legend', allowing
+the user to get a sense of the density of data across the range without even looking at the view.
+<h3>Final Thoughts</h3>
+Overall this was an enjoyable project to work on -- in addition to creating a cool visualization, we got to play
+with a new technology, namely Adobe Flex.  There were some challenges getting reasonable data to visualize, but
+we were able to successfully clean it to the point where we can draw some conclusions, and have a useful tool.
+</body>
+</html>

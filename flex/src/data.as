@@ -107,9 +107,7 @@ private function parseData( result:Object ):void {
 // Initialize our neighborhood data.
 private function initializeNeighborhoods():void {
 	for each (var mev:MusicEvent in _events) {
-		trace("looking up " + mev.getVenue().getZip());
 		if (_neighborhoods[mev.getVenue().getZip()] != null && _neighborhoodsInData[mev.getVenue().getZip()] == null) {
-			trace("adding " + mev.getVenue().getZip());
 			var neighborhoodDataForControls:Object = {data:mev.getVenue().getZip(), label:StringUtil.trim(_neighborhoods[mev.getVenue().getZip()])};
 			_neighborhoodsForControls.addItem(neighborhoodDataForControls);
 			_neighborhoodsInData[mev.getVenue().getZip()] = _neighborhoods[mev.getVenue().getZip()];

@@ -69,6 +69,7 @@ private function runAllFilters():void {
 		}
 		setDisplay(mev, (inZip && inGenre && inTime && inPrice));
 	}
+	redrawCircles();
 }
 
 // Set the display property on the given MusicEvent, and
@@ -76,14 +77,22 @@ private function runAllFilters():void {
 private function setDisplay(mev:MusicEvent, selected:Boolean):void {
 	if (mev.getDisplay() == false && selected) {
 		showOnMap(mev);
-		mev.showGraphItem(graph);
 		mev.setDisplay(true);
 	}
 	if (mev.getDisplay() == true && !selected) {
 		hideOnMap(mev);
-		mev.hideGraphItem();
 		mev.setDisplay(false);
 	}
+}
+
+private function getSelectedNeighborhoods():ArrayCollection {
+	var selectedNeighborhoods:ArrayCollection = new ArrayCollection();
+	for each (var zipFilter:Object in _neighborhoodFilters) {
+			if (zipFilter.selected) {
+				selectedNeighborhoods.addItem(zipFilter);
+			}
+		}
+	return selectedNeighborhoods;
 }
 
 // Display the neighborhood select multi-check box.
@@ -140,7 +149,7 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
 	point.y=0;        
 	point=linkButton.localToGlobal(point);
 	multiCheckBoxPopup.x=point.x + 120;
-	multiCheckBoxPopup.y=point.y - 40; 
+	multiCheckBoxPopup.y=point.y - 40;
 }
 
 // Draw our dual drag slider labels.

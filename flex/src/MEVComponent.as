@@ -9,7 +9,7 @@ import mx.containers.Canvas;
 public class MEVComponent extends UIComponent
 {
 	internal var mev: MusicEvent;
-	public function MEVComponent(p_mev: MusicEvent, c: Canvas) {
+	public function MEVComponent(p_mev: MusicEvent, c: Canvas, nth:Number, ccenter:Object) {
 		super();
 		mev = p_mev;
 
@@ -20,8 +20,13 @@ public class MEVComponent extends UIComponent
 			circleSize = 3;
 			circle.graphics.lineStyle(4, 0x33FF00, 0.8);
 		}
-		var circleX:uint = randomNumber(circleSize, c.width - circleSize); //scaleXToCanvas(mev, this.graph);
-		var circleY:uint = randomNumber(circleSize, c.height - circleSize); //scaleYToCanvas(mev, this.graph);
+
+		trace("at " + ccenter.x + ", " + ccenter.y);
+
+		//		var circleX:uint = randomNumber(circleSize, c.width - circleSize); //scaleXToCanvas(mev, this.graph);
+		//		var circleY:uint = randomNumber(circleSize, c.height - circleSize); //scaleYToCanvas(mev, this.graph);
+		var circleX:uint = ccenter.x;
+		var circleY:uint = ccenter.y;
 
 		circle.graphics.beginFill(0xFF0000, 0.5);
 		circle.graphics.drawCircle(circleX, circleY, circleSize);

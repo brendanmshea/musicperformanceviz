@@ -78,12 +78,18 @@ private function setDisplay(mev:MusicEvent, selected:Boolean):void {
 
 private function neighborhoodSelect(linkButton:LinkButton, selectionList:Text):void {
 	multiCheckBoxSelect(linkButton, selectionList, _neighborhoodsForControls,
-	                    initializeNeighborhoodFilters, recordNeighborhood, runAllFilters);
+	                    initializeNeighborhoodFilters, recordNeighborhood, runAllFilters,
+	                    function(item:String):String { return "#000000" });
 }
 
 private function genreSelect(linkButton:LinkButton, selectionList:Text):void {
 	multiCheckBoxSelect(linkButton, selectionList, _genresForControls,
-	                    initializeGenreFilters, recordGenre, runAllFilters);
+	                    initializeGenreFilters, recordGenre, runAllFilters,
+	                    function(item:String):String {
+	                    	var color:int = getGenreColor(item);
+	                    	var colorString:String = "#" + int2hex(color);
+	                    	return colorString;
+	                    });
 }
 
 private function multiCheckBoxSelect(linkButton:LinkButton,
@@ -91,7 +97,8 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
                                      dataProvider:ArrayCollection,
                                      callbackOnInitialize:Function,
                                      callbackOnRecord:Function,
-                                     callbackOnComplete:Function):void {
+                                     callbackOnComplete:Function,
+                                     itemColor:Function):void {
 	/* Open the TitleWindow container.
 	   Cast the return value of the createPopUp() method
 	   to our generic MultiCheckBoxWindow, the name of the 
@@ -106,6 +113,7 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
 	multiCheckBoxPopup.callbackOnInitialize = callbackOnInitialize;
 	multiCheckBoxPopup.callbackOnRecord = callbackOnRecord;
 	multiCheckBoxPopup.callbackOnComplete = callbackOnComplete;
+	multiCheckBoxPopup.itemColor = itemColor;
  
 	/* Pass a reference to the Text control to the TitleWindow container so that the 
 	   TitleWindow container can return data to the main application.
@@ -232,4 +240,61 @@ private function formatPrice(price:Number):String {
 	// and decimal (cents) portions using the designated decimal delimiter.
 	var output:String = currencySymbol + parts.join(decimalDelim);
 	return output;
+}
+
+private function int2hex(val:int):String {
+    var hex:String = '';
+    var arr:String = 'FEDCBA';
+    var len:uint = intBinLen(val);
+    
+    // Making sure it can at least match a single hex digit;
+    
+    if((len % 4) > 0){
+        while((len % 4) > 0){
+            len++;
+        }
+    }
+    
+    len /= 4;
+    
+    // Just for fun: making sure it is at least a byte, a word, or a dword. If you want just the exact hexadecimal count, comment this loop out.
+    
+    if((len % 4) > 0){
+        while((len % 4) > 0){
+            len++;
+        }
+    }
+    
+    for(var i:uint = 0; i < len; i++) {
+        if(((val & (0x0F << (i * 4))) >> (i * 4)) > 9){
+            hex = arr.charAt(15 - ((val & (0x0F << (i * 4))) >> (i * 4))) + hex;
+        }
+        else{
+            hex = String(((val & (0x0F << (i * 4))) >> (i * 4))) + hex;
+        }
+    }
+    
+    if(hex == ''){
+        hex = '000000';
+    }
+    
+    return hex;
+}
+
+private function intBinLen(val:int):uint {
+    var len:uint = 0;
+    var check:Boolean = true;
+    if(val != 0){
+        len = 1;
+        while(check){
+            if((val >> len) == 0){
+                check = false;
+            }
+            else{
+                len++;
+            }
+        }
+    }
+    
+    return len;
 }

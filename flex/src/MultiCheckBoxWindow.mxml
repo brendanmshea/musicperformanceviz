@@ -16,6 +16,7 @@
 			public var callbackOnInitialize:Function;
 			public var callbackOnRecord:Function;
 			public var callbackOnComplete:Function;
+			public var itemColor:Function;
 
              private function recordSelections(clearSelections:Boolean, allSelections:Boolean):void
              {
@@ -35,10 +36,11 @@
                       	 }
                          dataProvider[i].selected = rpCheckBox[i].selected;
                          if (rpCheckBox[i].selected) {
-                            selections.text = selections.text
-                                + "* "
+                         	var color:String = itemColor(rpCheckBox[i].label);
+                            selections.htmlText = selections.htmlText
+                                + "<font color=\"" + color + "\" size=\"14\">&#x25A0;</font> "
                                 + String(rpCheckBox[i].label)
-                                + "\n";
+                                + "<br>";
                          }
                          callbackOnRecord(rpCheckBox[i].data, rpCheckBox[i].selected);
                       }

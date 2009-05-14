@@ -244,3 +244,11 @@ public function getMinLong( ):Number {
 public function getMiddleLong():Number {
 	return getMinLong() + ((getMaxLong() - getMinLong()) / 2);
 }
+
+public function getGenreColor(type:String):int {
+	var color:int = 0x000000;
+	if (type in _genreColors) {
+		color = _genreColors[type];
+	}
+	return color;
+}

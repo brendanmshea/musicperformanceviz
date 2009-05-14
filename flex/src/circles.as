@@ -19,7 +19,7 @@ private function redrawCircles():void {
 				hoodinfo[zip] += 1;
 				//				trace("showing " + mev.getEventName() + " - " + hoodinfo[zip] + "th in " + zip);
 				// now add the ones that are supposed to be visible
-				new MEVComponent(mev, graph, hoodinfo[zip], 
+				new MEVComponent(mev, getGenreColor(mev.getType()), graph, hoodinfo[zip], 
 												 getClusterCenter(hoodindex[zip], selectedNeighborhoods.length, graph));
 			}
 		}

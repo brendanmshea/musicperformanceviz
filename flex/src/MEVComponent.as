@@ -9,7 +9,7 @@ import mx.containers.Canvas;
 public class MEVComponent extends UIComponent
 {
 	internal var mev: MusicEvent;
-	public function MEVComponent(p_mev: MusicEvent, c: Canvas, nth:Number, ccenter:Object) {
+	public function MEVComponent(p_mev: MusicEvent, color: int, c: Canvas, nth:Number, ccenter:Object) {
 		super();
 		mev = p_mev;
 
@@ -18,7 +18,7 @@ public class MEVComponent extends UIComponent
 		var circleSize:uint = Math.pow(p_mev.getPrice(), 0.7) + 3;
 		if (p_mev.getPrice() == 0) {
 			circleSize = 3;
-			circle.graphics.lineStyle(4, 0x33FF00, 0.8);
+			circle.graphics.lineStyle(3, 0x33FF00, 0.8);
 		}
 
 		//		trace("at " + ccenter.x + ", " + ccenter.y);
@@ -27,7 +27,7 @@ public class MEVComponent extends UIComponent
 		var circleX:uint = ccenter.x + offset.x;
 		var circleY:uint = ccenter.y + offset.y;
 
-		circle.graphics.beginFill(0xFF0000, 0.5);
+		circle.graphics.beginFill(color, 0.5);
 		circle.graphics.drawCircle(circleX, circleY, circleSize);
 		circle.graphics.endFill();
 
@@ -64,7 +64,7 @@ public class MEVComponent extends UIComponent
 		var angle:Number = 8 * Math.sqrt(nth);
 		var radius:Number = inFirstRing + 10 * Math.sqrt(nth);
 
-		trace(nth + " - " + angle + " - " + radius);
+		//		trace(nth + " - " + angle + " - " + radius);
 		//		trace("radius: "+ radius);
 		return {x:radius * Math.cos(angle), y:radius * Math.sin(angle)};
 	}

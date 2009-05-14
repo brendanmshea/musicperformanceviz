@@ -15,7 +15,7 @@ public class MEVComponent extends UIComponent
 
 		var circle:Shape = new Shape();
 
-		var circleSize:uint = Math.sqrt(p_mev.getPrice()) + 3;
+		var circleSize:uint = Math.pow(p_mev.getPrice(), 0.7) + 3;
 		if (p_mev.getPrice() == 0) {
 			circleSize = 3;
 			circle.graphics.lineStyle(4, 0x33FF00, 0.8);
@@ -23,7 +23,7 @@ public class MEVComponent extends UIComponent
 
 		//		trace("at " + ccenter.x + ", " + ccenter.y);
 
-		var offset:Object = getOffset(nth);
+		var offset:Object = getSpiralOffset(nth);
 		var circleX:uint = ccenter.x + offset.x;
 		var circleY:uint = ccenter.y + offset.y;
 
@@ -59,14 +59,14 @@ public class MEVComponent extends UIComponent
 		return Math.floor(Math.random() * (1+high-low)) + low;
 	}
 		
-	private function getOffset(nth:Number):Object {
-		var inFirstRing:uint = 6; // number in the inner ring
-		var ringFactor:uint = 1; // how many times as many per ring
-		var ringNum:uint = Math.ceil(nth/inFirstRing) / ringFactor;
-		var radius:uint = 10 * ringNum;
+	private function getSpiralOffset(nth:Number):Object {
+		var inFirstRing:uint = 2; // number in the inner ring
+		var angle:Number = 8 * Math.sqrt(nth);
+		var radius:Number = inFirstRing + 10 * Math.sqrt(nth);
 
+		trace(nth + " - " + angle + " - " + radius);
 		//		trace("radius: "+ radius);
-		return {x:radius * Math.cos(nth / Math.PI), y:radius * Math.sin(nth / Math.PI)};
+		return {x:radius * Math.cos(angle), y:radius * Math.sin(angle)};
 	}
 
 }

@@ -61,19 +61,28 @@ private function runAllFilters():void {
 		}
 		setDisplay(mev, (inZip && inGenre && inTime && inPrice));
 	}
+	redrawCircles();
 }
 
 private function setDisplay(mev:MusicEvent, selected:Boolean):void {
 	if (mev.getDisplay() == false && selected) {
 		showOnMap(mev);
-		mev.showGraphItem(graph);
 		mev.setDisplay(true);
 	}
 	if (mev.getDisplay() == true && !selected) {
 		hideOnMap(mev);
-		mev.hideGraphItem();
 		mev.setDisplay(false);
 	}
+}
+
+private function getSelectedNeighborhoods():ArrayCollection {
+	var selectedNeighborhoods:ArrayCollection = new ArrayCollection();
+	for each (var zipFilter:Object in _neighborhoodFilters) {
+			if (zipFilter.selected) {
+				selectedNeighborhoods.addItem(zipFilter);
+			}
+		}
+	return selectedNeighborhoods;
 }
 
 private function neighborhoodSelect(linkButton:LinkButton, selectionList:Text):void {
@@ -119,7 +128,7 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
 	point.y=0;        
 	point=linkButton.localToGlobal(point);
 	multiCheckBoxPopup.x=point.x + 120;
-	multiCheckBoxPopup.y=point.y - 40; 
+	multiCheckBoxPopup.y=point.y - 40;
 }
 
 //basic function to create the labels for our slider based on minimum and maximum values of slider, and number of labels to show

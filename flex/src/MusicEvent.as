@@ -98,22 +98,6 @@ public class MusicEvent {
 		                Number(timeComponents[0]), Number(timeComponents[1]), Number(timeComponents[2]));
 	}
 
-	public function showGraphItem(c: Canvas): void {
-		if (_graphItem == null) {
-			_graphItem = new MEVComponent(this, c);
-		} else {
-			_graphItem.visible = true;
-		}
-	}
-
-	public function hideGraphItem(): void {
-		if (_graphItem == null) {
-			// do nothing.  it doesn't even exist yet
-		} else {
-			_graphItem.visible = false;
-		}
-	}
-
 
 }
 }

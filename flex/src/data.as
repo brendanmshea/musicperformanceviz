@@ -39,12 +39,19 @@ private var _neighborhoods:Object = {
 
 // Map of genres to colors.
 private var _genreColors:Object = {
-	                               "Techno & Dance":0x33CC33,
-	                               "Music":0x3333FF,
+	                               "Other":0x33CC33,
+	                               "Unspecified":0x3333FF,
 	                               "Folk":0xFF0066,
-	                               "Gospel":0xCCCC99,
+	                               "Jazz":0xCCCC99,
+	                               "Performing Arts":0x996666,
+	                               "World Music":0x666699,
+	                               "Classical":0x66FF99,
+	                               "Country":0x66FF66,
+	                               "Alternative":0xCCFF66,
+	                               "Blues":0x6666FF,
+	                               "Pop/Rock":0x99FF00,
 	                               "Pop":0x99FF99,
-	                               "Theater":0x993333
+	                               "Rock":0x993333
 
 }
 
@@ -63,7 +70,7 @@ public function init():void {
 	trace("init called");
 	var loader:URLLoader = new URLLoader();
     loader.addEventListener(Event.COMPLETE, completeHandler);
-	var request:URLRequest = new URLRequest("enriched.tsv");
+	var request:URLRequest = new URLRequest("cleangenres.tsv");
 	try {
 		loader.load(request);
 	} catch (error:Error) {
@@ -96,7 +103,7 @@ private function parseData( result:Object ):void {
 		if (!firstLine) {
 			var fields:Array = line.split("\t");
 			var venue:Venue = new Venue(fields[7], fields[8], fields[9], fields[10], fields[11], fields[12], parseFloat(fields[5]), parseFloat(fields[6]));
-			_events.push(new MusicEvent(fields[0], fields[2], fields[3], fields[4], venue, fields[13], fields[15], fields[16]));
+			_events.push(new MusicEvent(fields[0], fields[2], fields[3], fields[4], venue, fields[13], fields[15], fields[22]));
 		} else {
 			firstLine = false;
 		}
@@ -118,7 +125,7 @@ private function initializeNeighborhoods():void {
 // Initialize our genre data.
 private function initializeGenres():void {
 	for each (var mev:MusicEvent in _events) {
-		if (_genres[mev.getType()] == null) {
+		if (mev.getType() && _genres[mev.getType()] == null) {
 			_genresForControls.addItem({data:mev.getType(), label:StringUtil.trim(mev.getType())});
 			_genres[mev.getType()] = mev.getType();
 		}

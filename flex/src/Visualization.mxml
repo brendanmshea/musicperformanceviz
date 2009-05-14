@@ -15,7 +15,7 @@
 			<mx:Script source="map.as"/>
 		</mx:Canvas>
 	</mx:ViewStack>
-	<mx:ButtonBar x="404" y="456" dataProvider="viewstack1"/>
+	<mx:ToggleButtonBar x="404" y="456" dataProvider="viewstack1"/>
 
 	<!-- Time slider. -->
 	<mx:Metadata>

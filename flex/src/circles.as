@@ -17,7 +17,7 @@ private function redrawCircles():void {
 			if (mev.getDisplay()) {
 				var zip:String = mev.getVenue().getZip();
 				hoodinfo[zip] += 1;
-				trace("showing " + mev.getEventName() + " - " + hoodinfo[zip] + "th in " + zip);
+				//				trace("showing " + mev.getEventName() + " - " + hoodinfo[zip] + "th in " + zip);
 				// now add the ones that are supposed to be visible
 				new MEVComponent(mev, graph, hoodinfo[zip], 
 												 getClusterCenter(hoodindex[zip], selectedNeighborhoods.length, graph));
@@ -26,12 +26,12 @@ private function redrawCircles():void {
 }
 
 private function getClusterCenter(which:Number, total:Number, c:Canvas):Object {
-	trace("w/t " + which + ", " + total);
+	//	trace("w/t " + which + ", " + total);
 			
 	var scalex:Number = getClusterCenterX(which, total);
 	var scaley:Number = getClusterCenterY(which, total);
 
-	trace("scale " + scalex + ", " + scaley);
+	//	trace("scale " + scalex + ", " + scaley);
 
 	return {x:Math.floor(c.width * scalex), y:Math.floor(c.height * scaley)};
 }
@@ -51,7 +51,7 @@ private function getClusterCenterX(which:Number, total:Number):Number {
 	var segments:Number = Math.ceil((total + 1) * 2 / 3);
 	var slot:Number = Math.round(which * 2 / 3);
 
-	trace("which/total " + which + "/" + total + " => " + "slot/segments" + slot + "/" + segments);
+	//	trace("which/total " + which + "/" + total + " => " + "slot/segments" + slot + "/" + segments);
 
 	return slot / segments;
 }
@@ -66,9 +66,9 @@ private function getClusterCenterY(which:Number, total:Number):Number {
 	}
 	
 	if (which % 3 == 1) {
-		return 0.3;
+		return 0.25;
 	}
 	
-	return 0.7;
+	return 0.75;
 }
 

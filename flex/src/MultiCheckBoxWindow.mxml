@@ -9,6 +9,7 @@
             import mx.controls.Text;
             import mx.core.Application;
             import mx.core.Repeater;
+            import mx.core.UIComponent;
             import mx.collections.ArrayCollection;                        
                  
             // A reference to the TextInput control in which to put the result.
@@ -31,7 +32,6 @@
                 //selections.text = "";
 
                 var yCurrent:int = 0;
-                var childIndex:int = 100;
                 for (var i:int = 0; i < rpCheckBox.length; i++) {
               
                       // We dynamically add a "selected" property 
@@ -45,15 +45,24 @@
                       	 }
                          dataProvider[i].selected = rpCheckBox[i].selected;
                          if (rpCheckBox[i].selected) {
+                         	var xCurrent:int = 0;
+                         	// If the item color is non-black, draw a legend box.
+                         	var itemColor:int = itemColor(rpCheckBox[i].label);
+                         	if (itemColor != 0x000000) {
+                         		var legendSquare:UIComponent = new UIComponent();
+                         		legendSquare.graphics.beginFill(itemColor);
+                         		legendSquare.graphics.drawRect(0, yCurrent + 4, 11, 11);
+                         		legendSquare.graphics.endFill();
+                         		canvas.addChild(legendSquare);
+                         		xCurrent += 14;
+                         	}
                          	var label:Label = new Label();
                          	label.text = rpCheckBox[i].label;
-                         	label.setStyle("color", itemColor(rpCheckBox[i].label));
 							label.setStyle("fontSize", 11);
-							label.x = 0;
+							label.x = xCurrent;
 							label.y = yCurrent;
 							canvas.addChild(label);
-							yCurrent += 12;
-							childIndex ++;
+							yCurrent += 14;
                          }
                          callbackOnRecord(rpCheckBox[i].data, rpCheckBox[i].selected);
                       }

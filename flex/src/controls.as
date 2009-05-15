@@ -222,15 +222,15 @@ private function noPriceChangeEvent():void
 
 // Initialize the dates selected on the date slider.
 private function initializeSelectedDates():void {
-	_minSelectedDate = calculateDateFromSlider(25);
-	_maxSelectedDate = calculateDateFromSlider(75);
+	_minSelectedDate = calculateDateFromSlider(0);
+	_maxSelectedDate = calculateDateFromSlider(10);
 	timeSelected.text = "Time: from " + formatDate(_minSelectedDate) + " to " + formatDate(_maxSelectedDate);
 }
 
 // Initialize the prices selected on the price slider.
 private function initializeSelectedPrices():void {
-	_minSelectedPrice = calculatePriceFromSlider(25);
-	_maxSelectedPrice = calculatePriceFromSlider(75);
+	_minSelectedPrice = calculatePriceFromSlider(0);
+	_maxSelectedPrice = calculatePriceFromSlider(25);
 	priceSelected.text = "Price: from " + formatPrice(_minSelectedPrice) + " to " + formatPrice(_maxSelectedPrice);
 }
 

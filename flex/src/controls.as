@@ -3,7 +3,6 @@ import flash.events.Event;
 
 import mx.collections.ArrayCollection;
 import mx.controls.LinkButton;
-import mx.controls.Text;
 import mx.managers.PopUpManager;
 
 // Our selected filters.
@@ -230,6 +229,26 @@ private function initializeSelectedPrices():void {
 	_minSelectedPrice = calculatePriceFromSlider(25);
 	_maxSelectedPrice = calculatePriceFromSlider(75);
 	priceSelected.text = "Price: from " + formatPrice(_minSelectedPrice) + " to " + formatPrice(_maxSelectedPrice);
+}
+
+// Highlights for genre and neighborhood.
+public static function highlightGenreAndNeighborhood(mev:MusicEvent):void {
+	// Highlight the genre...
+	var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
+	genreLabel.setStyle("color", 0x00FFCC);
+	// ...and the Neighborhood.
+	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
+	neighborhoodLabel.setStyle("color", 0x00FFCC);
+}
+
+// ...and corresponding unhighlight.
+private static function unhighlightGenreAndNeighborhood(mev:MusicEvent):void {
+	// Highlight the genre...
+	var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
+	genreLabel.setStyle("color", 0x000000);
+	// ...and the Neighborhood.
+	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
+	neighborhoodLabel.setStyle("color", 0x000000);
 }
 
 // Format the given date as a string.

@@ -65,36 +65,24 @@ private var _minPrice:Number = 0; // Min price in our data.
 private var _maxPrice:Number = 0; // Max price in our data.
 private var _dataInitialized:Boolean = false; // Whether or not the data is initialized.
 
+[Embed(source="cleangenres.tsv", mimeType="application/octet-stream")]
+private static const Data:Class;
+
 // Initialize our data.
 public function init():void {
 	trace("init called");
-	var loader:URLLoader = new URLLoader();
-    loader.addEventListener(Event.COMPLETE, completeHandler);
-	var request:URLRequest = new URLRequest("cleangenres.tsv");
-	try {
-		loader.load(request);
-	} catch (error:Error) {
-		trace("Unable to load requested document.  error: " + error);
-	}
-	trace("init finished");
-}
-
-// Handler called when our data file is loaded.
-private function completeHandler(event:Event):void {
-	trace("completeHandler called");
-	var loader:URLLoader = URLLoader(event.target);
-	parseData(loader.data);
+	parseData(new Data().toString());
 	initializeNeighborhoods();
 	initializeGenres();
 	initializeMap(getMiddleLat(), getMiddleLong(), _events);
 	initializeDates();
 	initializePrices();
 	_dataInitialized = true;
-	trace("completeHandler done");
+	trace("init finished");
 }
 
 // Parse the data file, and load our MusicEvents and Venues.
-private function parseData( result:Object ):void {
+private function parseData( result:String ):void {
 	trace("parseData called");
 	var lines:Array = result.split("\n");
 	var firstLine:Boolean = true;

@@ -20,6 +20,10 @@ public class MEVComponent extends UIComponent
 			circleSize = 3;
 			circle.graphics.lineStyle(3, 0x33FF00, 0.8);
 		}
+		if (p_mev.getPrice() < 0) {
+			circleSize = 3;
+			circle.graphics.lineStyle(3, 0xFF0000, 0.8);
+		}
 
 		//		trace("at " + ccenter.x + ", " + ccenter.y);
 
@@ -37,6 +41,9 @@ public class MEVComponent extends UIComponent
 		addEventListener(MouseEvent.MOUSE_OUT, handleUnHover);
 		addEventListener(MouseEvent.CLICK, handleClick);
 
+		toolTip = mev.getEventName() + "\n"
+			+ mev.getDisplayPrice() + "\n"
+			+ mev.getType();
 		c.addChild(this);
 	}
 

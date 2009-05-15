@@ -8,6 +8,7 @@ public class MusicEvent {
 	private var _rawEndTime:String;
 	private var _startTime:Date;
 	private var _venue:Venue;
+	private var _displayPrice:String;
 	private var _rawPrice:String;
 	private var _price:Number;
 	private var _url:String;
@@ -15,12 +16,13 @@ public class MusicEvent {
 	private var _display:Boolean;
 	private var _graphItem:MEVComponent;
 
-	public function MusicEvent( id:String, eventName:String, startTime:String, endTime:String, venue:Venue, price:String, url:String, type:String) {
+	public function MusicEvent( id:String, eventName:String, startTime:String, endTime:String, venue:Venue, displayPrice:String, price:String, url:String, type:String) {
 		_id = id;
 		_eventName = eventName;
 		_rawStartTime = startTime;
 		_rawEndTime = endTime;
 		_venue = venue;
+		_displayPrice = displayPrice;
 		_rawPrice = price;
 		_url = url;
 		_type=type;
@@ -46,6 +48,9 @@ public class MusicEvent {
 	}
 	public function getVenue( ):Venue {
 		return _venue;
+	}
+	public function getDisplayPrice( ):String {
+		return _displayPrice;
 	}
 	public function getRawPrice( ):String {
 		return _rawPrice;

@@ -68,12 +68,12 @@
 			click="neighborhoodSelect(neighborhoods, neighborhoodsSelections)" />
 		<mx:Label text="(click to select)" />
 	</mx:HBox>
-	<mx:Canvas id="neighborhoodsSelections" width="300" x="480" y="505" />
+	<mx:Canvas id="neighborhoodsSelections" width="300" x="488" y="505" />
 	<!-- Genre selector. -->
 	<mx:HBox x="710" y="485">
 		<mx:LinkButton id="genres" label="Genre" color="blue" textDecoration="underline"
 		               click="genreSelect(genres, genreSelections)" />
 		<mx:Label text="(click to select)" />
 	</mx:HBox>
-	<mx:Canvas id="genreSelections" width="300" x="710" y="505" />
+	<mx:Canvas id="genreSelections" width="300" x="718" y="505" />
 </mx:Application>

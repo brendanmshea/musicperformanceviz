@@ -79,7 +79,8 @@
              horizontalGap="10" verticalGap="5"
              paddingLeft="10" paddingTop="10"
              paddingBottom="10" paddingRight="10" 
-             maxHeight="300"    
+             maxHeight="300"
+             width="230"
              verticalScrollPolicy="auto"
              horizontalScrollPolicy="off"
              >

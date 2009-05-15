@@ -34,9 +34,6 @@ private function recordGenre(genre:String, selected:Boolean):void {
 // Initialize the genre filters.
 private function initializeGenreFilters():void {
 	_genreFilters = new ArrayCollection();
-	for each (var gfc:Object in _genresForControls) {
-		_genreFilters.addItem({genre:gfc.data, selected:true});
-	}
 }
 
 // Run all of our filters, setting the display property on each MusicEvent,

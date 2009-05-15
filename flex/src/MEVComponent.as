@@ -59,7 +59,7 @@ public class MEVComponent extends UIComponent
 			+ "Price: " + mev.getDisplayPrice() + "<br/>"
 			+ "Venue: " + mev.getVenue().getVenue() + "<br/>"
 			+ "Genre: " + mev.getType() + "<br/>"
-			+ "<a href='" + mev.getUrl() + "'>" + mev.getUrl() + "</a><br/>"
+			+ "<a href='" + mev.getUrl() + "' style='text-decoration:underline;'>" + mev.getUrl() + "</a><br/>"
 			;
 
 		Application.application.eventDescriptionBox.setVisible(true);

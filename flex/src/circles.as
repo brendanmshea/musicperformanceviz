@@ -1,26 +1,38 @@
+import mx.controls.Label;
+import mx.core.UIComponent;
+
 private function redrawCircles():void {
 	trace("redrawing");
+	while(graph.numChildren){ graph.removeChildAt(0) } // throw them all away, first
+
 	var selectedNeighborhoods:ArrayCollection = getSelectedNeighborhoods();
 
 	var hoodinfo:Dictionary = new Dictionary();
-	var hoodindex:Dictionary = new Dictionary();
 
-	var count:uint = 1;
+	var count:uint = 1; // temporarily keep track of number of neighborhoods, to calculate the cluster centers
 	for each (var hood:Object in selectedNeighborhoods) {
-			hoodinfo[hood.zip] = 0;
-			hoodindex[hood.zip] = count++;
+			var ccenter:Object = getClusterCenter(count++, selectedNeighborhoods.length, graph);
+			hoodinfo[hood.zip] = {eventcount:0, ccenter:ccenter};
+
+			trace("trying to label " + hood.zip + " with: " + _neighborhoods[hood.zip]);
+			var comp:UIComponent = new UIComponent();
+			var label:Label = new Label();
+			label.text = _neighborhoods[hood.zip];
+			Application.application.addChild(label); // no idea why these won't show up when palces in the canvas, but they don't
+			label.setStyle("color", 0x999999);
+			label.setStyle("fontSize", 24);
+			label.validateNow(); // need to do this so it can tell use the textWidth
+			label.move(ccenter.x - label.textWidth / 2, ccenter.y - 50);
+			addChild(comp);
 		}
 
-	while(graph.numChildren){ graph.removeChildAt(0) } // throw them all away, first
-
+	// now go through all the events
 	for each (var mev:MusicEvent in _events) {
-			if (mev.getDisplay()) {
+			if (mev.getDisplay()) { // and draw them only if they're supposed to be visible
 				var zip:String = mev.getVenue().getZip();
-				hoodinfo[zip] += 1;
+				hoodinfo[zip].eventcount++; // track how many events are in this neighborhood
 				//				trace("showing " + mev.getEventName() + " - " + hoodinfo[zip] + "th in " + zip);
-				// now add the ones that are supposed to be visible
-				new MEVComponent(mev, getGenreColor(mev.getType()), graph, hoodinfo[zip], 
-												 getClusterCenter(hoodindex[zip], selectedNeighborhoods.length, graph));
+				new MEVComponent(mev, getGenreColor(mev.getType()), graph, hoodinfo[zip].eventcount, hoodinfo[zip].ccenter);
 			}
 		}
 }

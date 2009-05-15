@@ -18,7 +18,6 @@ private var _showNoPrice:Boolean = false;
 // Add or remove the given neighborhood filters.
 private function recordNeighborhood(zip:String, selected:Boolean):void {
 	_neighborhoodFilters.addItem({zip:zip, selected:selected});
-	runAllFilters();
 }
 
 // Initialize the neighborhood filters.
@@ -29,7 +28,6 @@ private function initializeNeighborhoodFilters():void {
 // Add or remove the given genre filter.
 private function recordGenre(genre:String, selected:Boolean):void {
 	_genreFilters.addItem({genre:genre, selected:selected});
-	runAllFilters();
 }
 
 // Initialize the genre filters.

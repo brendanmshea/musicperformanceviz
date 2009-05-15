@@ -72,12 +72,7 @@ public class MEVComponent extends UIComponent
 		
 	private function handleUnHover(event:MouseEvent):void {
 		alpha = 1.0;
-		// Unhighlight the genre...
-		var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
-		genreLabel.setStyle("color", 0x000000);
-		// ...and the Neighborhood.
-		var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
-		neighborhoodLabel.setStyle("color", 0x000000);
+		unhighlight(mev);
 	}
 		
 	public function randomNumber(low:Number=0, high:Number=100):Number {

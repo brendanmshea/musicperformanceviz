@@ -39,19 +39,19 @@ private var _neighborhoods:Object = {
 
 // Map of genres to colors.
 private var _genreColors:Object = {
-	                               "Other":0x33CC33,
-	                               "Unspecified":0x3333FF,
-	                               "Folk":0xFF0066,
-	                               "Jazz":0xCCCC99,
-	                               "Performing Arts":0x996666,
-	                               "World Music":0x666699,
-	                               "Classical":0x66FF99,
-	                               "Country":0x66FF66,
-	                               "Alternative":0xCCFF66,
+	                               "Other":0xCCCCCC,
+	                               "Unspecified":0xAAAAAA,
+	                               "Folk":0xA6CEE3,
+	                               "Jazz":0xFF7F00,
+	                               "Performing Arts":0xB2DF8A,
+	                               "World Music":0x33A02C,
+	                               "Classical":0x1F77B4,
+	                               "Country":0xFB9A99,
+	                               "Alternative":0x984EA3,
 	                               "Blues":0x6666FF,
-	                               "Pop/Rock":0x99FF00,
-	                               "Pop":0x99FF99,
-	                               "Rock":0x993333
+	                               "Pop/Rock":0xE31A1C,
+	                               "Pop":0x377DB8,
+	                               "Rock":0x4DAF4A
 
 }
 

@@ -12,9 +12,13 @@ import mx.core.UIComponent;
 public class MEVComponent extends UIComponent
 {
 	internal var mev: MusicEvent;
-	public function MEVComponent(p_mev: MusicEvent, color: int, c: Canvas, nth:Number, ccenter:Object) {
+	internal var highlight: Function;
+	internal var unhighlight: Function;
+	public function MEVComponent(p_mev: MusicEvent, color: int, c: Canvas, nth:Number, ccenter:Object, p_highlight:Function, p_unhighlight:Function) {
 		super();
 		mev = p_mev;
+		highlight = p_highlight;
+		unhighlight = p_unhighlight;
 
 		var circle:Shape = new Shape();
 
@@ -56,12 +60,7 @@ public class MEVComponent extends UIComponent
 		
 	private function handleHover(event:MouseEvent):void {
 		alpha = 1.8;
-		// Highlight the genre...
-		var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
-		genreLabel.setStyle("color", 0x00FFCC);
-		// ...and the Neighborhood.
-		var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
-		neighborhoodLabel.setStyle("color", 0x00FFCC);
+		highlight(mev);
 	}
 		
 	private function handleUnHover(event:MouseEvent):void {

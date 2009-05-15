@@ -32,7 +32,8 @@ private function redrawCircles():void {
 				var zip:String = mev.getVenue().getZip();
 				hoodinfo[zip].eventcount++; // track how many events are in this neighborhood
 				//				trace("showing " + mev.getEventName() + " - " + hoodinfo[zip] + "th in " + zip);
-				new MEVComponent(mev, getGenreColor(mev.getType()), graph, hoodinfo[zip].eventcount, hoodinfo[zip].ccenter);
+				new MEVComponent(mev, getGenreColor(mev.getType()), graph, hoodinfo[zip].eventcount, hoodinfo[zip].ccenter,
+				                 highlightGenreAndNeighborhood, unhighlightGenreAndNeighborhood);
 			}
 		}
 }

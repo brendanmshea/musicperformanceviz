@@ -1,7 +1,6 @@
 // Mapping methods.
 import com.google.maps.InfoWindowOptions;
 import com.google.maps.LatLng;
-import com.google.maps.Map;
 import com.google.maps.MapMouseEvent;
 import com.google.maps.MapType;
 import com.google.maps.controls.PositionControl;
@@ -49,6 +48,14 @@ public function createMarker(mev:MusicEvent):Marker {
    		                     "Venue: " + mev.getVenue().getVenue() + "\n" +
    		                     "Date: " + formatDate(mev.getStartTime());
 		marker.openInfoWindow(new InfoWindowOptions({title: title, content:content}));
+	});
+
+	marker.addEventListener(MapMouseEvent.ROLL_OVER, function(e:MapMouseEvent):void {
+		highlightGenreAndNeighborhood(mev);
+	});
+
+	marker.addEventListener(MapMouseEvent.ROLL_OUT, function(e:MapMouseEvent):void {
+		unhighlightGenreAndNeighborhood(mev);
 	});
 	return marker;
 }

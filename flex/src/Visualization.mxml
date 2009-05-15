@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:dsc="com.dougmccune.controls.*"	layout="absolute" xmlns:ds="*" creationComplete="init()">
+<mx:Application  width="892" scrollRect="{new Rectangle(0, 0, 900, 700)}" xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:dsc="com.dougmccune.controls.*"	layout="absolute" xmlns:ds="*" creationComplete="init()">
 	<mx:Script source="controls.as"/>
 	<mx:Script source="data.as"/>
 	<mx:Script source="circles.as"/>
@@ -75,14 +75,9 @@
 		               click="genreSelect(genres, genreSelections)" />
 		<mx:Label text="(click to select)" />
 	</mx:HBox>
-	<mx:Box x="100" y="500" height="200" width="600" backgroundColor="0xFFDD88" id="eventDescriptionBox"
+	<mx:Box x="100" y="500" height="170" width="600" backgroundColor="0xFFDD88" id="eventDescriptionBox"
                 paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" visible="false">
-          <mx:Box click="hideInfoBox()" borderThickness="1" borderColor="red" borderStyle="solid"
-                  paddingBottom="3" paddingLeft="5" paddingRight="5" paddingTop="0"
-                  useHandCursor="true" buttonMode="true" mouseChildren="false">
-            <mx:Label id="closeButton" fontSize="20" text="x"/>
-          </mx:Box>
-          <mx:Text id="eventDescription" fontSize="14" />
-        </mx:Box>
+	<mx:Text id="eventDescription" />
+	</mx:Box>
 	<mx:Canvas id="genreSelections" width="300" x="718" y="505" />
 </mx:Application>

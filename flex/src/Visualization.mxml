@@ -77,7 +77,12 @@
 	</mx:HBox>
 	<mx:Box x="100" y="500" height="200" width="600" backgroundColor="0xFFDD88" id="eventDescriptionBox"
                 paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" visible="false">
-	<mx:Text id="eventDescription" />
-	</mx:Box>
+          <mx:Box click="hideInfoBox()" borderThickness="1" borderColor="red" borderStyle="solid"
+                  paddingBottom="3" paddingLeft="5" paddingRight="5" paddingTop="0"
+                  useHandCursor="true" buttonMode="true" mouseChildren="false">
+            <mx:Label id="closeButton" fontSize="20" text="x"/>
+          </mx:Box>
+          <mx:Text id="eventDescription" fontSize="14" />
+        </mx:Box>
 	<mx:Canvas id="genreSelections" width="300" x="718" y="505" />
 </mx:Application>

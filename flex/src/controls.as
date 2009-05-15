@@ -174,6 +174,7 @@ private function priceDataTipFunction(value:String):String
 // Handler for a change on the time slider.
 private function timeSliderChangeEvent(event:Event):void
 {
+	trace("TIMESLIDERCHANGEEVENT!!!");
 	_minSelectedDate = calculateDateFromSlider(event.target.values[0]);
 	_maxSelectedDate = calculateDateFromSlider(event.target.values[1]);
 	timeSelected.text = "Time: from " + formatDate(_minSelectedDate) + " to " + formatDate(_maxSelectedDate);
@@ -183,6 +184,7 @@ private function timeSliderChangeEvent(event:Event):void
 // Handler for a change on the price slider.
 private function priceSliderChangeEvent(event:Event):void
 {
+	trace("PRICESLIDERCHANGEEVENT!!!");
 	_minSelectedPrice = calculatePriceFromSlider(event.target.values[0]);
 	_maxSelectedPrice = calculatePriceFromSlider(event.target.values[1]);
 	priceSelected.text = "Price: from " + formatPrice(_minSelectedPrice) + " to " + formatPrice(_maxSelectedPrice);

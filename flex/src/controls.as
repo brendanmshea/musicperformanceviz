@@ -3,7 +3,6 @@ import flash.events.Event;
 
 import mx.collections.ArrayCollection;
 import mx.controls.LinkButton;
-import mx.controls.Text;
 import mx.managers.PopUpManager;
 
 // Our selected filters.
@@ -144,11 +143,6 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
 	multiCheckBoxPopup.itemColor = itemColor;
 	multiCheckBoxPopup.canvas = labelCanvas;
  
-	/* Pass a reference to the Text control to the TitleWindow container so that the 
-	   TitleWindow container can return data to the main application.
-	*/
-	//multiCheckBoxPopup.selections=selectionList;        
- 
 	// Calculate position of TitleWindow in Application's coordinates.
 	// Position it a bit up and to the right of the LinkButton control.
 	var point:Point = new Point();
@@ -235,6 +229,26 @@ private function initializeSelectedPrices():void {
 	_minSelectedPrice = calculatePriceFromSlider(25);
 	_maxSelectedPrice = calculatePriceFromSlider(75);
 	priceSelected.text = "Price: from " + formatPrice(_minSelectedPrice) + " to " + formatPrice(_maxSelectedPrice);
+}
+
+// Highlights for genre and neighborhood.
+public static function highlightGenreAndNeighborhood(mev:MusicEvent):void {
+	// Highlight the genre...
+	var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
+	genreLabel.setStyle("color", 0x00FFCC);
+	// ...and the Neighborhood.
+	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
+	neighborhoodLabel.setStyle("color", 0x00FFCC);
+}
+
+// ...and corresponding unhighlight.
+private static function unhighlightGenreAndNeighborhood(mev:MusicEvent):void {
+	// Highlight the genre...
+	var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
+	genreLabel.setStyle("color", 0x000000);
+	// ...and the Neighborhood.
+	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
+	neighborhoodLabel.setStyle("color", 0x000000);
 }
 
 // Format the given date as a string.

@@ -1,20 +1,25 @@
 package
 {
-import mx.controls.Alert;
-import mx.core.UIComponent;
 import flash.display.Shape;
 import flash.events.MouseEvent;
+
 import mx.containers.Canvas;
 import mx.containers.Box;
+import mx.controls.Label;
 import mx.controls.Text;
 import mx.core.Application;
+import mx.core.UIComponent;
 
 public class MEVComponent extends UIComponent
 {
 	internal var mev: MusicEvent;
-	public function MEVComponent(p_mev: MusicEvent, color: int, c: Canvas, nth:Number, ccenter:Object) {
+	internal var highlight: Function;
+	internal var unhighlight: Function;
+	public function MEVComponent(p_mev: MusicEvent, color: int, c: Canvas, nth:Number, ccenter:Object, p_highlight:Function, p_unhighlight:Function) {
 		super();
 		mev = p_mev;
+		highlight = p_highlight;
+		unhighlight = p_unhighlight;
 
 		var circle:Shape = new Shape();
 
@@ -61,10 +66,17 @@ public class MEVComponent extends UIComponent
 	
 	private function handleHover(event:MouseEvent):void {
 		alpha = 1.8;
+		highlight(mev);
 	}
 		
 	private function handleUnHover(event:MouseEvent):void {
 		alpha = 1.0;
+		// Unhighlight the genre...
+		var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
+		genreLabel.setStyle("color", 0x000000);
+		// ...and the Neighborhood.
+		var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
+		neighborhoodLabel.setStyle("color", 0x000000);
 	}
 		
 	public function randomNumber(low:Number=0, high:Number=100):Number {

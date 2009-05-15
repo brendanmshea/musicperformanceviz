@@ -59,6 +59,7 @@
             <mx:Text id="priceSelected" text=""/>
 		</mx:HBox>
 	</mx:VBox>
+	<mx:CheckBox x="335" y="665" id="noPrice" label="Include No Price" click="noPriceChangeEvent()"/>
 
 	<!-- Neighborhood selector.  -->
 	<mx:HBox x="480" y="485">

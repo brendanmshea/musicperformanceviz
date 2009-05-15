@@ -14,6 +14,7 @@ private var _minSelectedDate:Date = new Date(0); // Date filters
 private var _maxSelectedDate:Date = new Date(0);
 private var _minSelectedPrice:Number = 0; // Price filters
 private var _maxSelectedPrice:Number = 0;
+private var _showNoPrice:Boolean = false;
 
 // Add or remove the given neighborhood filters.
 private function recordNeighborhood(zip:String, selected:Boolean):void {
@@ -65,6 +66,9 @@ private function runAllFilters():void {
 		if (mev.getPrice() >= 0 &&
 		    _minSelectedPrice <= mev.getPrice() &&
 		    _maxSelectedPrice >= mev.getPrice()) {
+			inPrice = true;
+		}
+		if (_showNoPrice && mev.getPrice() < 0) {
 			inPrice = true;
 		}
 		setDisplay(mev, (inZip && inGenre && inTime && inPrice));
@@ -207,6 +211,12 @@ private function calculatePriceFromSlider(value:Number):Number {
 	// from the number given by scaling.
 	var priceBits:Number = (getMaxPrice() - getMinPrice()) / 100.0;
 	return getMinPrice() + (priceBits * value);
+}
+
+// Handler for when the 'no price' checkbox state is changed.
+private function noPriceChangeEvent():void
+{
+	_showNoPrice = noPrice.selected;
 }
 
 // Initialize the dates selected on the date slider.

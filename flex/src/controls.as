@@ -19,6 +19,7 @@ private var _showNoPrice:Boolean = false;
 // Add or remove the given neighborhood filters.
 private function recordNeighborhood(zip:String, selected:Boolean):void {
 	_neighborhoodFilters.addItem({zip:zip, selected:selected});
+	runAllFilters();
 }
 
 // Initialize the neighborhood filters.
@@ -29,6 +30,7 @@ private function initializeNeighborhoodFilters():void {
 // Add or remove the given genre filter.
 private function recordGenre(genre:String, selected:Boolean):void {
 	_genreFilters.addItem({genre:genre, selected:selected});
+	runAllFilters();
 }
 
 // Initialize the genre filters.
@@ -100,31 +102,31 @@ private function getSelectedNeighborhoods():ArrayCollection {
 }
 
 // Display the neighborhood select multi-check box.
-private function neighborhoodSelect(linkButton:LinkButton, selectionList:Text):void {
-	multiCheckBoxSelect(linkButton, selectionList, _neighborhoodsForControls,
+private function neighborhoodSelect(linkButton:LinkButton, canvas:Canvas):void {
+	multiCheckBoxSelect(linkButton, _neighborhoodsForControls,
 	                    initializeNeighborhoodFilters, recordNeighborhood, runAllFilters,
-	                    function(item:String):String { return "#000000" });
+	                    function(item:String):int { return 0x000000 },
+	                    canvas);
 }
 
 // Display the genre select multi-check box.
-private function genreSelect(linkButton:LinkButton, selectionList:Text):void {
-	multiCheckBoxSelect(linkButton, selectionList, _genresForControls,
+private function genreSelect(linkButton:LinkButton, canvas:Canvas):void {
+	multiCheckBoxSelect(linkButton, _genresForControls,
 	                    initializeGenreFilters, recordGenre, runAllFilters,
-	                    function(item:String):String {
-	                    	var color:int = getGenreColor(item);
-	                    	var colorString:String = "#" + int2hex(color);
-	                    	return colorString;
-	                    });
+	                    function(item:String):int {
+	                    	return getGenreColor(item);
+	                    },
+	                    canvas);
 }
 
 // Display a generic multi-check box.
 private function multiCheckBoxSelect(linkButton:LinkButton,
-                                     selectionList:Text,
                                      dataProvider:ArrayCollection,
                                      callbackOnInitialize:Function,
                                      callbackOnRecord:Function,
                                      callbackOnComplete:Function,
-                                     itemColor:Function):void {
+                                     itemColor:Function,
+                                     labelCanvas:Canvas):void {
 	/* Open the TitleWindow container.
 	   Cast the return value of the createPopUp() method
 	   to our generic MultiCheckBoxWindow, the name of the 
@@ -140,11 +142,12 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
 	multiCheckBoxPopup.callbackOnRecord = callbackOnRecord;
 	multiCheckBoxPopup.callbackOnComplete = callbackOnComplete;
 	multiCheckBoxPopup.itemColor = itemColor;
+	multiCheckBoxPopup.canvas = labelCanvas;
  
 	/* Pass a reference to the Text control to the TitleWindow container so that the 
 	   TitleWindow container can return data to the main application.
 	*/
-	multiCheckBoxPopup.selections=selectionList;        
+	//multiCheckBoxPopup.selections=selectionList;        
  
 	// Calculate position of TitleWindow in Application's coordinates.
 	// Position it a bit up and to the right of the LinkButton control.
@@ -217,6 +220,7 @@ private function calculatePriceFromSlider(value:Number):Number {
 private function noPriceChangeEvent():void
 {
 	_showNoPrice = noPrice.selected;
+	runAllFilters();
 }
 
 // Initialize the dates selected on the date slider.
@@ -282,62 +286,4 @@ private function formatPrice(price:Number):String {
 	// and decimal (cents) portions using the designated decimal delimiter.
 	var output:String = currencySymbol + parts.join(decimalDelim);
 	return output;
-}
-
-// Convert the given int to a hex string.
-private function int2hex(val:int):String {
-    var hex:String = '';
-    var arr:String = 'FEDCBA';
-    var len:uint = intBinLen(val);
-    
-    // Making sure it can at least match a single hex digit;
-    
-    if((len % 4) > 0){
-        while((len % 4) > 0){
-            len++;
-        }
-    }
-    
-    len /= 4;
-    
-    // Just for fun: making sure it is at least a byte, a word, or a dword. If you want just the exact hexadecimal count, comment this loop out.
-    
-    if((len % 4) > 0){
-        while((len % 4) > 0){
-            len++;
-        }
-    }
-    
-    for(var i:uint = 0; i < len; i++) {
-        if(((val & (0x0F << (i * 4))) >> (i * 4)) > 9){
-            hex = arr.charAt(15 - ((val & (0x0F << (i * 4))) >> (i * 4))) + hex;
-        }
-        else{
-            hex = String(((val & (0x0F << (i * 4))) >> (i * 4))) + hex;
-        }
-    }
-    
-    if(hex == ''){
-        hex = '000000';
-    }
-    
-    return hex;
-}
-
-private function intBinLen(val:int):uint {
-    var len:uint = 0;
-    var check:Boolean = true;
-    if(val != 0){
-        len = 1;
-        while(check){
-            if((val >> len) == 0){
-                check = false;
-            }
-            else{
-                len++;
-            }
-        }
-    }
-    
-    return len;
 }

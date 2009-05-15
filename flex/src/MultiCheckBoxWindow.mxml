@@ -2,14 +2,17 @@
 <!-- Adapted from http://www.objectsatellite.com/html/FlexSolutions/MultiCheckBoxWindow/MultiCheckBoxWindowDemo.html -->
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" title="Please select" modalTransparencyBlur="0">
 	<mx:Script>
-        <![CDATA[       
+        <![CDATA[
+        	import mx.containers.Canvas;       
             import mx.managers.PopUpManager;
+            import mx.controls.Label;
             import mx.controls.Text;
+            import mx.core.Application;
             import mx.core.Repeater;
             import mx.collections.ArrayCollection;                        
                  
             // A reference to the TextInput control in which to put the result.
-            public var selections:Text;
+            //public var selections:Text;
             
             [Bindable]
             public var dataProvider:ArrayCollection;
@@ -18,12 +21,17 @@
 			public var callbackOnRecord:Function;
 			public var callbackOnComplete:Function;
 			public var itemColor:Function;
+			public var canvas:Canvas;
 
              private function recordSelections(clearSelections:Boolean, allSelections:Boolean):void
              {
              	callbackOnInitialize();
-                selections.text = "";
+             	// Erase the current labels.
+             	canvas.removeAllChildren();
+                //selections.text = "";
 
+                var yCurrent:int = 0;
+                var childIndex:int = 100;
                 for (var i:int = 0; i < rpCheckBox.length; i++) {
               
                       // We dynamically add a "selected" property 
@@ -37,11 +45,15 @@
                       	 }
                          dataProvider[i].selected = rpCheckBox[i].selected;
                          if (rpCheckBox[i].selected) {
-                         	var color:String = itemColor(rpCheckBox[i].label);
-                            selections.htmlText = selections.htmlText
-                                + "<font color=\"" + color + "\" size=\"14\">&#x25A0;</font> "
-                                + String(rpCheckBox[i].label)
-                                + "<br>";
+                         	var label:Label = new Label();
+                         	label.text = rpCheckBox[i].label;
+                         	label.setStyle("color", itemColor(rpCheckBox[i].label));
+							label.setStyle("fontSize", 11);
+							label.x = 0;
+							label.y = yCurrent;
+							canvas.addChild(label);
+							yCurrent += 12;
+							childIndex ++;
                          }
                          callbackOnRecord(rpCheckBox[i].data, rpCheckBox[i].selected);
                       }

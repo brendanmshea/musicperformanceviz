@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Script>
+		<![CDATA[
+		
+		
+		import flash.display.Graphics;
+		
+		[Bindable]
+		public var gradientColors:Array;
+		[Bindable]
+		public var gradientAlphas:Array;
+		[Bindable]
+		public var gradientRatios:Array;
+		[Bindable]
+		public var gradientAngle:int;
+		[Bindable]
+		public var innerRadius:Number;
+		
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+		{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			
+			var fillType:String = GradientType.LINEAR;
+			var colors:Array = gradientColors;
+			var alphas:Array = gradientAlphas;
+			var ratios:Array = gradientRatios;
+			var matrix:Matrix = new Matrix();
+			matrix.createGradientBox(unscaledWidth, unscaledHeight, (gradientAngle * Math.PI/180));
+			
+			var spreadMethod:String = SpreadMethod.PAD;
+			
+			graphics.clear();
+			graphics.beginGradientFill(fillType, colors, alphas, ratios, matrix, spreadMethod);
+			if(isNaN(innerRadius))
+			{
+				graphics.drawRect(1, 1, unscaledWidth - 1, unscaledHeight - 1);
+			}
+			else
+			{
+				graphics.drawRoundRect(1, 1, unscaledWidth - 2, unscaledHeight - 2, innerRadius);
+			}
+			graphics.endFill();
+		}
+		
+		]]>
+	</mx:Script>
+
+</mx:VBox>

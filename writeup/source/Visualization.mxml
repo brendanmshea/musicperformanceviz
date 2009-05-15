@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:dsc="com.dougmccune.controls.*"	layout="absolute" xmlns:ds="*" creationComplete="init()">
+	<mx:Script source="controls.as"/>
+	<mx:Script source="data.as"/>
+	<mx:Script source="circles.as"/>
+
+	<mx:ViewStack x="10" y="10" id="viewstack1" width="868" height="440">
+		<mx:Canvas label="Graph" id="graph" width="100%" height="100%"
+			borderThickness="1" borderColor="red" borderStyle="solid">
+ 		</mx:Canvas>
+		<mx:Canvas label="Map" width="100%" height="100%">
+			<maps:Map xmlns:maps="com.google.maps.*" id="map"
+				mapevent_mapready="onMapReady(event)" width="100%" height="100%"
+				key="ABQIAAAAnylVxBr4JiDtDlrqkiOqZxSAhY-_9xEY4tKjfb8L_K9NmjWAChQI34SLLuJiLc6iyGvTQ6_OFJCaRg"/>
+			<mx:Script source="map.as"/>
+		</mx:Canvas>
+	</mx:ViewStack>
+	<mx:ToggleButtonBar x="404" y="456" dataProvider="viewstack1"/>
+
+	<!-- Time slider. -->
+	<mx:Metadata>
+		[Event("sliderChange")]
+	</mx:Metadata>
+	<mx:VBox x="40" y="450" width="400" height="150" verticalAlign="middle" horizontalAlign="center">
+		<ds:DualDragSlider id="timeSlider"
+		                   width="400"
+		                   values="[25, 75]"
+		                   numberOfLabels="5"
+		                   showDataTip="true"
+		                   dragSliderColor="0x0033CC"
+		                   minimum="0" maximum="100"
+		                   dataTipFormatFunction="{timeDataTipFunction}"
+		                   sliderLabels="{getSliderLabels(Math.abs(timeSlider.maximum - timeSlider.minimum), timeSlider.numberOfLabels)}"
+		                   sliderChange="timeSliderChangeEvent(event)"
+		                   />
+		<mx:HBox>
+            <mx:Text id="timeSelected" text=""/>
+		</mx:HBox>
+	</mx:VBox>
+
+	<!-- Price slider. -->
+	<mx:Metadata>
+		[Event("sliderChange")]
+	</mx:Metadata>
+	<mx:VBox x="40" y="540" width="400" height="150" verticalAlign="middle" horizontalAlign="center">
+		<ds:DualDragSlider id="priceSlider"
+		                   width="400"
+		                   values="[25, 75]"
+		                   numberOfLabels="5"
+		                   showDataTip="true"
+		                   dragSliderColor="0x0033CC"
+		                   minimum="0" maximum="100"
+		                   dataTipFormatFunction="{priceDataTipFunction}"
+		                   sliderLabels="{getSliderLabels(Math.abs(priceSlider.maximum - priceSlider.minimum), priceSlider.numberOfLabels)}"
+		                   sliderChange="priceSliderChangeEvent(event)"
+		                   />
+		<mx:HBox>
+            <mx:Text id="priceSelected" text=""/>
+		</mx:HBox>
+	</mx:VBox>
+	<mx:CheckBox x="335" y="665" id="noPrice" label="Include No Price" click="noPriceChangeEvent()"/>
+
+	<!-- Neighborhood selector.  -->
+	<mx:HBox x="480" y="485">
+		<mx:LinkButton id="neighborhoods" label="Neighborhoods" 
+			color="blue" textDecoration="underline"
+			click="neighborhoodSelect(neighborhoods, neighborhoodsSelections)" />
+		<mx:Label text="(click to select)" />
+	</mx:HBox>
+	<mx:Canvas id="neighborhoodsSelections" width="300" x="488" y="505" />
+	<!-- Genre selector. -->
+	<mx:HBox x="710" y="485">
+		<mx:LinkButton id="genres" label="Genre" color="blue" textDecoration="underline"
+		               click="genreSelect(genres, genreSelections)" />
+		<mx:Label text="(click to select)" />
+	</mx:HBox>
+	<mx:Box x="100" y="500" height="200" width="600" backgroundColor="0xFFDD88" id="eventDescriptionBox"
+                paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" visible="false">
+          <mx:Box click="hideInfoBox()" borderThickness="1" borderColor="red" borderStyle="solid"
+                  paddingBottom="3" paddingLeft="5" paddingRight="5" paddingTop="0"
+                  useHandCursor="true" buttonMode="true" mouseChildren="false">
+            <mx:Label id="closeButton" fontSize="20" text="x"/>
+          </mx:Box>
+          <mx:Text id="eventDescription" fontSize="14" />
+        </mx:Box>
+	<mx:Canvas id="genreSelections" width="300" x="718" y="505" />
+</mx:Application>

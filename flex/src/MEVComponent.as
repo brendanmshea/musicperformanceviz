@@ -5,6 +5,9 @@ import mx.core.UIComponent;
 import flash.display.Shape;
 import flash.events.MouseEvent;
 import mx.containers.Canvas;
+import mx.containers.Box;
+import mx.controls.Text;
+import mx.core.Application;
 
 public class MEVComponent extends UIComponent
 {
@@ -48,9 +51,14 @@ public class MEVComponent extends UIComponent
 	}
 
 	private function handleClick(event:MouseEvent):void {
-		Alert.show(mev.getEventName() + " - " + mev.getPrice());
+		var info:String = mev.getEventName() + "\n"
+			+ mev.getDisplayPrice() + "\n"
+			+ mev.getType();
+
+		Application.application.eventDescriptionBox.setVisible(true);
+		Application.application.eventDescription.text = info;
 	}
-		
+	
 	private function handleHover(event:MouseEvent):void {
 		alpha = 1.8;
 	}

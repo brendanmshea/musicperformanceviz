@@ -44,10 +44,13 @@ public function createMarker(mev:MusicEvent):Marker {
 	                    new MarkerOptions({clickable: true, hasShadow: true, fillStyle: new FillStyle({color: color})}));
 	marker.addEventListener(MapMouseEvent.CLICK, function(e:MapMouseEvent):void {
 		var title:String = mev.getEventName();
-   		var content:String = "Price: " + formatPrice(mev.getPrice()) + "\n" +
-   		                     "Venue: " + mev.getVenue().getVenue() + "\n" +
-   		                     "Date: " + formatDate(mev.getStartTime());
-		marker.openInfoWindow(new InfoWindowOptions({title: title, content:content}));
+   		var info:String = "Price:" + mev.getDisplayPrice() + "<br/>"
+			+ "Venue: " + mev.getVenue().getVenue() + "<br/>"
+			+ "Time: " + formatDate(mev.getStartTime()) + "<br/>"
+			+ "Genre: " + mev.getType() + "<br/>"
+			+ "<a href='" + mev.getUrl() + "'>" + mev.getUrl() + "</a><br/>"
+			;
+		marker.openInfoWindow(new InfoWindowOptions({title: title, contentHTML:info}));
 	});
 
 	marker.addEventListener(MapMouseEvent.ROLL_OVER, function(e:MapMouseEvent):void {

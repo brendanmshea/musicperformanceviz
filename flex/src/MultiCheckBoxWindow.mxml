@@ -61,6 +61,7 @@
 							label.setStyle("fontSize", 11);
 							label.x = xCurrent;
 							label.y = yCurrent;
+							label.name = rpCheckBox[i].data;
 							canvas.addChild(label);
 							yCurrent += 14;
                          }

@@ -144,11 +144,6 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
 	multiCheckBoxPopup.itemColor = itemColor;
 	multiCheckBoxPopup.canvas = labelCanvas;
  
-	/* Pass a reference to the Text control to the TitleWindow container so that the 
-	   TitleWindow container can return data to the main application.
-	*/
-	//multiCheckBoxPopup.selections=selectionList;        
- 
 	// Calculate position of TitleWindow in Application's coordinates.
 	// Position it a bit up and to the right of the LinkButton control.
 	var point:Point = new Point();

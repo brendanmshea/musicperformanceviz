@@ -1,5 +1,6 @@
 // Control handlers and helper methods.
 import flash.events.Event;
+import flash.geom.Rectangle;
 
 import mx.collections.ArrayCollection;
 import mx.controls.LinkButton;
@@ -151,8 +152,8 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
 	point.x=0;
 	point.y=0;        
 	point=linkButton.localToGlobal(point);
-	multiCheckBoxPopup.x=point.x + 120;
-	multiCheckBoxPopup.y=point.y - 40;
+	multiCheckBoxPopup.x=point.x - 100;
+	multiCheckBoxPopup.y=point.y - 300;
 }
 
 // Draw our dual drag slider labels.
@@ -178,7 +179,6 @@ private function priceDataTipFunction(value:String):String
 // Handler for a change on the time slider.
 private function timeSliderChangeEvent(event:Event):void
 {
-	trace("TIMESLIDERCHANGEEVENT!!!");
 	_minSelectedDate = calculateDateFromSlider(event.target.values[0]);
 	_maxSelectedDate = calculateDateFromSlider(event.target.values[1]);
 	timeSelected.text = "Time: from " + formatDate(_minSelectedDate) + " to " + formatDate(_maxSelectedDate);
@@ -188,7 +188,6 @@ private function timeSliderChangeEvent(event:Event):void
 // Handler for a change on the price slider.
 private function priceSliderChangeEvent(event:Event):void
 {
-	trace("PRICESLIDERCHANGEEVENT!!!");
 	_minSelectedPrice = calculatePriceFromSlider(event.target.values[0]);
 	_maxSelectedPrice = calculatePriceFromSlider(event.target.values[1]);
 	priceSelected.text = "Price: from " + formatPrice(_minSelectedPrice) + " to " + formatPrice(_maxSelectedPrice);

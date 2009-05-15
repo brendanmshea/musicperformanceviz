@@ -56,7 +56,8 @@ public class MEVComponent extends UIComponent
 
 	private function handleClick(event:MouseEvent):void {
 		var info:String = mev.getEventName() + "<br/>"
-			+ "Price:" + mev.getDisplayPrice() + "<br/>"
+			+ "Price: " + mev.getDisplayPrice() + "<br/>"
+			+ "Venue: " + mev.getVenue().getVenue() + "<br/>"
 			+ "Genre: " + mev.getType() + "<br/>"
 			+ "<a href='" + mev.getUrl() + "'>" + mev.getUrl() + "</a><br/>"
 			;

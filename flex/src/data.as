@@ -25,7 +25,6 @@ private var _neighborhoods:Object = {
                                      "02144":"West Somerville",
                                      "02145":"Winter Hill",
                                      "02148":"Malden",
-                                     "02149":"Everett",
                                      "02150":"Chelsea",
                                      "02151":"Revere Beach",
                                      "02152":"Winthrop",

@@ -76,11 +76,9 @@
 		<mx:Label text="(click to select)" />
 	</mx:HBox>
 	<mx:Box x="100" y="500" height="170" width="600" backgroundColor="0xFFDD88" id="eventDescriptionBox"
-		paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" visible="false">
-		<mx:Box click="hideInfoBox()" borderThickness="1" borderColor="red" borderStyle="solid"
-			paddingBottom="3" paddingLeft="5" paddingRight="5" paddingTop="0"
-			useHandCursor="true" buttonMode="true" mouseChildren="false">
-			<mx:Label id="closeButton" fontSize="12" text="x"/>
+		paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5" visible="false">
+		<mx:Box click="hideInfoBox()" height="16" width="16" backgroundImage="CloseWindow.gif"
+            useHandCursor="true" buttonMode="true" mouseChildren="false">
 		</mx:Box>
 		<mx:Text id="eventDescription" />
 	</mx:Box>

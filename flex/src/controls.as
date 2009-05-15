@@ -88,6 +88,10 @@ private function setDisplay(mev:MusicEvent, selected:Boolean):void {
 	}
 }
 
+private function hideInfoBox():void {
+	eventDescriptionBox.setVisible(false);
+}
+
 private function getSelectedNeighborhoods():ArrayCollection {
 	var selectedNeighborhoods:ArrayCollection = new ArrayCollection();
 	for each (var zipFilter:Object in _neighborhoodFilters) {

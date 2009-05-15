@@ -50,18 +50,19 @@ public class MEVComponent extends UIComponent
 		addEventListener(MouseEvent.CLICK, handleClick);
 
 		toolTip = mev.getEventName() + "\n"
-			+ mev.getDisplayPrice() + "\n"
-			+ mev.getType();
+			+ mev.getDisplayPrice();
 		c.addChild(this);
 	}
 
 	private function handleClick(event:MouseEvent):void {
-		var info:String = mev.getEventName() + "\n"
-			+ mev.getDisplayPrice() + "\n"
-			+ mev.getType();
+		var info:String = mev.getEventName() + "<br/>"
+			+ "Price:" + mev.getDisplayPrice() + "<br/>"
+			+ "Genre: " + mev.getType() + "<br/>"
+			+ "<a href='" + mev.getUrl() + "'>" + mev.getUrl() + "</a><br/>"
+			;
 
 		Application.application.eventDescriptionBox.setVisible(true);
-		Application.application.eventDescription.text = info;
+		Application.application.eventDescription.htmlText = info;
 	}
 	
 	private function handleHover(event:MouseEvent):void {

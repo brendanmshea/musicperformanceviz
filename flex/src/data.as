@@ -91,7 +91,7 @@ private function parseData( result:String ):void {
 		if (!firstLine) {
 			var fields:Array = line.split("\t");
 			var venue:Venue = new Venue(fields[7], fields[8], fields[9], fields[10], fields[11], fields[12], parseFloat(fields[5]), parseFloat(fields[6]));
-			_events.push(new MusicEvent(fields[0], fields[2], fields[3], fields[4], venue, fields[13], fields[15], fields[22]));
+			_events.push(new MusicEvent(fields[0], fields[2], fields[3], fields[4], venue, fields[14], fields[13], fields[15], fields[22]));
 		} else {
 			firstLine = false;
 		}

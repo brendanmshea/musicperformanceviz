@@ -18,8 +18,8 @@ private function redrawCircles():void {
 			var comp:UIComponent = new UIComponent();
 			var label:Label = new Label();
 			label.text = _neighborhoods[hood.zip];
-			Application.application.addChild(label); // no idea why these won't show up when palces in the canvas, but they don't
-			label.setStyle("color", 0x999999);
+			//			Application.application.addChild(label); // no idea why these won't show up when palces in the canvas, but they don't
+			label.setStyle("color", 0x777777);
 			label.setStyle("fontSize", 24);
 			label.validateNow(); // need to do this so it can tell use the textWidth
 			label.move(ccenter.x - label.textWidth / 2, ccenter.y - 50);

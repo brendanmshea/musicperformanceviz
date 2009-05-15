@@ -37,6 +37,9 @@ public class MEVComponent extends UIComponent
 		addEventListener(MouseEvent.MOUSE_OUT, handleUnHover);
 		addEventListener(MouseEvent.CLICK, handleClick);
 
+		toolTip = mev.getEventName() + "\n"
+			+ mev.getDisplayPrice() + "\n"
+			+ mev.getType();
 		c.addChild(this);
 	}
 

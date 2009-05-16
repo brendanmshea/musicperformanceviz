@@ -32,8 +32,8 @@ var requiredRevision = 124;
 This visualization tries to answer questions about Boston area music performances, such
 as:
 <ul>
-<li>Are performances of certain music genres more common in some neighborhoods than others?</li>
-<li>For a given time period, where can I find folk performances for less than $20?</li>
+	<li>For a given time period, where can I find folk performances for less than $20?</li>
+	<li>Are performances of certain music genres more common in some neighborhoods than others?</li>
 </ul>
 The target audience is people who are interested in local music performances, and fans
 of music and live music performances in general.
@@ -98,7 +98,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 </script>
 <noscript>
   	<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-			id="Visualization" width="800" height="700"
+			id="Visualization" width="900" height="700"
 			codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
 			<param name="movie" value="Visualization.swf" />
 			<param name="quality" value="high" />
@@ -119,36 +119,90 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 The visualization has two main parts:
 <ul>
 	<li>The view (on the top) shows either the Graph view of the data, or the Map view of the data, depending
-on which is selected.</li>
+on which is selected.  (The default view is Graph.)</li>
 	<li>The filters (on the bottom) allow you to filter data by time, price, genre and neighborhood.</li>
 </ul>
+The filters available are:
+<ul>
+	<li>Time - a dual slider to control the time range that you want to visualize</li>
+	<li>Price - a dual slider to control the price range that you want to visualize</li>
+	<li>Include No Price - includes events where we could not determine the price</li>
+	<li>Neighborhoods - click the title to select what neighborhoods you want to see</li>
+	<li>Genres - click the title to select what genres you want to see</li>
+</ul>
+Note that the list of genres selected also doubles as the color legend for genres.  The colors selected were from <a href="http://www.colorbrewer.org">ColorBrewer</a>.
+<br/>
+<br/>
 By changing the filters, the data shown in the view will change to match.  You can therefore 'drill down' into
 a subset of the data that is of interest.
 <br/>
 <br/>
 The Graph view shows the data in an abstract representation -- location is encoded by position (the events are
-grouped by neighborhood), price is encoded by size, and genre is encoded by color.  Clicking on the event will
-show more detailed data about the event, including a link to the artist's allmusic.com page, if one exists.
+grouped by neighborhood), price is encoded by size, and genre is encoded by color.  Free events show up with a green ring around them, and events where we couldn't determine the price (which you will only see if you check 'Include No Price') show up with a red ring around them.
 <br/>
 <br/>
 The Map view shows the same data, but now displayed on a map.  Location is of course encoded by position, and genre
-is encoded by color.  Similar to the Graph view, clicking on the event shows more detailed data.
+is encoded by color.
+<br/>
+<br/>
+Hovering over an event in either view will highlight its genre and neighborhood in the filter list.  Also, clicking on the event will give detail information about the event, including the full price information, the venue, time, and a link to the artist's URL, if available.
 <h3>Data</h3>
 There are two primary sources of data that we used:
 <ul>
 	<li>www.boston.com- this is where we got all of the music events from, plus a bunch of supporting data</li> 
 	<li>www.allmusic.com - we used this to round out genre information, as well as get links</li>
 </ul>
+There was a fair amount of cleanup that needed to be done when we were scraping the data.  For instance, we would end up with some genres that were functionally similar or identical, despite being different strings -- for instance, "Electronica" and "Techno &amp; Dance".  (I suppose the Electronica connoisseur may object to being lumped in with Techno, but for our purposes they were the same.)  So we did some cleanup and merging of the genres to get a reasonable, consolidated list.
+<br/><br/>
+Price was another area where cleanup of the data needed to happen.  Often, the price from boston.com would be something like:
+<ul>
+	<li>"$15/$12; half price for mothers!"</li>
+	<li>"$27.50 - $35.00"</li>
+	<li>"$10 / $5 on Guest List"</li>
+</ul>
+In these cases, we parsed the string and used the first price that we find for filtering purposes (so for those examples, it would be $15, $27.50, and $10, respectively.)
+<br/>
+<br/>
+The data file (a tab separated file) that we use in the application is:&nbsp;<a href="data/cleangenres.tsv">cleangenres.tsv</a>
+<h3>Code</h3>
+Application source files:
+<br/><br/>
+<a href="source/circles.as">circles.as</a> -- ActionScript responsible for rendering of the Graph view.<br/>
+<a href="source/controls.as">controls.as</a> -- ActionScript responsible for handling events on the filter controls.<br/>
+<a href="source/data.as">data.as</a> -- ActionScript responsible for loading and parsing data.<br/>
+<a href="source/DualDragSlider.mxml">DualDragSlider.mxml</a> -- The dual slider component (for the time and price filters).<br/>
+<a href="source/GradientBox.mxml">GradientBox.mxml</a> -- Used as part of the dual slider component.<br/>
+<a href="source/map.as">map.as</a> -- ActionScript responsible for handling mapping.<br/>
+<a href="source/MEVComponent.as">MEVComponent.as</a> -- Component to render the music events in the Graph view.<br/>
+<a href="source/MultiCheckBoxWindow.mxml">MultiCheckBoxWindow.mxml</a> -- The multi-check box component for selecting neighborhoods and genres.<br/>
+<a href="source/MusicEvent.as">MusicEvent.as</a> -- Bean to represent a MusicEvent.<br/>
+<a href="source/Venue.as">Venue.as</a>  -- Bean to represent a Venue.<br/>
+<a href="source/Visualization.mxml">Visualization.mxml</a> -- The main application component.<br/>
+<br/>
+Data scraping source files:
+<a href="source/allmusic.com.pl">allmusic.com.pl</a><br/>
+<a href="source/boscom.pl">boscom.pl</a><br/>
+<a href="source/boston.com.pl">boston.com.pl</a><br/>
+<a href="source/cleanup.pl">cleanup.pl</a><br/>
+<a href="source/lib.pl">lib.pl</a><br/>
+<br/>
+Also, the source is freely available on <a href="http://github.com/bms6/musicperformanceviz/">github</a>.
 <h3>Insights</h3>
-Fill this in.
+It is interesting to note the mix of genres in each neighborhood.  Much of this is due to the venues that are present in those neighborhoods, of course; and for neighborhoods that don't have as many, they tend to be dominated by the same genre.  For instance, Central Square in Cambridge is mainly Alternative performances, with a smattering of Rock (and relatively inexpensive ones at that) as they are mostly at the Middle East.  Harvard Square, on the other hand, has a richer mix of (slightly higher priced) genres, including Jazz, Pop/Rock, and a few Classical and Alternative performances thrown in there as well.
+<br/>
+<br/>
+The filters also end up being a reasonably powerful way to find music events, such as the initial question posed, "For a given time period, where can I find folk performances for less than $20?"  (It turns out that the answer is at Club Passim in Harvard Square.)
 <h3>Future Improvements</h3>
-Beyond general cleanup of the data quality (for instance, the 'Unknown' genre),
-it would be nice to have some richer mapping capabilities, like the ability to get directions
-from an address to an event.  Also, the time and price filters could show a 'histogram' of data as their 'legend', allowing
-the user to get a sense of the density of data across the range without even looking at the view.
+Beyond some incremental cleanup to the data quality and data scraping, we can envision adding the following features:
+<ul>
+	<li>Enabling directions in the map view (to answer the question, 'How do I get from my house to the event?')</li>
+	<li>Textual searching and filtering (by artist or venue, say)</li>
+	<li>Showing some data distribution 'histogram' on the time and price sliders, to get an idea of where the bulk of events lie, or if they are evenly distributed</li>
+</ul>
 <h3>Final Thoughts</h3>
 Overall this was an enjoyable project to work on -- in addition to creating a cool visualization, we got to play
-with a new technology, namely Adobe Flex.  There were some challenges getting reasonable data to visualize, but
+with a new (to us) technology in Adobe Flex.  In addition, we used Git as the source control tool, which was a great learning experience.
+There were some challenges getting reasonable data to visualize, but
 we were able to successfully clean it to the point where we can draw some conclusions, and have a useful tool.
 </body>
 </html>

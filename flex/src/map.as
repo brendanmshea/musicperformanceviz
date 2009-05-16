@@ -43,7 +43,7 @@ public function createMarker(mev:MusicEvent):Marker {
 	var marker:Marker = new Marker(latLng,
 	                    new MarkerOptions({clickable: true, hasShadow: true, fillStyle: new FillStyle({color: color})}));
 	marker.addEventListener(MapMouseEvent.CLICK, function(e:MapMouseEvent):void {
-		var title:String = mev.getEventName() + " " + mev.getVenue().getZip();
+		var title:String = mev.getEventName();
    		var info:String =
    			mev.getVenue().getVenue() + "<br/>"
 			+ "<a href='" + mev.getVenueUrl() + "'>" + mev.getVenueUrl() + "</a><br/>"

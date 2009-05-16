@@ -1,12 +1,10 @@
+// Music Event UI component -- the circle on the graph view.
 package
 {
 import flash.display.Shape;
 import flash.events.MouseEvent;
 
 import mx.containers.Canvas;
-import mx.containers.Box;
-import mx.controls.Label;
-import mx.controls.Text;
 import mx.core.Application;
 import mx.core.UIComponent;
 
@@ -15,32 +13,33 @@ public class MEVComponent extends UIComponent
 	internal var mev: MusicEvent;
 	internal var highlight: Function;
 	internal var unhighlight: Function;
-	public function MEVComponent(p_mev: MusicEvent, color: int, c: Canvas, nth:Number, ccenter:Object, p_highlight:Function, p_unhighlight:Function) {
+	internal var formatDate: Function;
+	public function MEVComponent(p_mev: MusicEvent, color: int, c: Canvas, nth:Number, ccenter:Object, p_highlight:Function, p_unhighlight:Function, p_formatDate:Function) {
 		super();
 		mev = p_mev;
 		highlight = p_highlight;
 		unhighlight = p_unhighlight;
+		formatDate = p_formatDate;
 
 		var circle:Shape = new Shape();
 
 		var circleSize:uint = Math.pow(p_mev.getPrice(), 0.7) + 3;
+		// Free events get a fixed, small size.
 		if (p_mev.getPrice() == 0) {
-			circleSize = 3;
-			circle.graphics.lineStyle(3, 0x33FF00, 0.8);
+			circleSize = 4;
 		}
-		if (p_mev.getPrice() < 0) {
-			circleSize = 3;
-			circle.graphics.lineStyle(3, 0xFF0000, 0.8);
-		}
-
-		//		trace("at " + ccenter.x + ", " + ccenter.y);
 
 		var offset:Object = getSpiralOffset(nth);
 		var circleX:uint = ccenter.x + offset.x;
 		var circleY:uint = ccenter.y + offset.y;
 
-		circle.graphics.beginFill(color, 0.5);
-		circle.graphics.drawCircle(circleX, circleY, circleSize);
+		circle.graphics.beginFill(color, 0.6);
+		// Unknown price events are squares.
+		if (p_mev.getPrice() < 0) {
+			circle.graphics.drawRect(circleX, circleY, 8, 8);
+		} else {
+			circle.graphics.drawCircle(circleX, circleY, circleSize);
+		}
 		circle.graphics.endFill();
 
 		addChild(circle);
@@ -55,11 +54,12 @@ public class MEVComponent extends UIComponent
 	}
 
 	private function handleClick(event:MouseEvent):void {
-		var info:String = mev.getEventName() + "<br/>"
-			+ "Price: " + mev.getDisplayPrice() + "<br/>"
-			+ "Venue: " + mev.getVenue().getVenue() + "<br/>"
-			+ "Genre: " + mev.getType() + "<br/>"
-			+ "<a href='" + mev.getUrl() + "'>" + mev.getUrl() + "</a><br/>"
+		var info:String = mev.getEventName() + "<br/><br/>"
+			+ mev.getVenue().getVenue() + "<br/>"
+			+ "<a href='" + mev.getVenueUrl() + "'>" + mev.getVenueUrl() + "</a><br/>"
+			+ mev.getDisplayPrice() + "<br/>"
+			+ formatDate(mev.getStartTime()) + "<br/>"
+			+ "<a href='" + mev.getEventUrl() + "'>" + mev.getEventUrl() + "</a><br/>"
 			;
 
 		Application.application.eventDescriptionBox.setVisible(true);

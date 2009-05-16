@@ -1,5 +1,6 @@
 // Control handlers and helper methods.
 import flash.events.Event;
+import flash.geom.Rectangle;
 
 import mx.collections.ArrayCollection;
 import mx.controls.LinkButton;
@@ -16,8 +17,8 @@ private var _maxSelectedPrice:Number = 0;
 private var _showNoPrice:Boolean = false;
 
 // Add or remove the given neighborhood filters.
-private function recordNeighborhood(zip:String, selected:Boolean):void {
-	_neighborhoodFilters.addItem({zip:zip, selected:selected});
+private function recordNeighborhood(neighborhood:String, selected:Boolean):void {
+	_neighborhoodFilters.addItem({neighborhood:neighborhood, selected:selected});
 }
 
 // Initialize the neighborhood filters.
@@ -40,10 +41,10 @@ private function initializeGenreFilters():void {
 private function runAllFilters():void {
 	for each (var mev:MusicEvent in _events) {
 		// Neighborhood filter.
-		var inZip:Boolean = false;
-		for each (var zipFilter:Object in _neighborhoodFilters) {
-			if (mev.getVenue().getZip() == zipFilter.zip && zipFilter.selected) {
-				inZip = true;
+		var inNeighborhood:Boolean = false;
+		for each (var neighborhoodFilter:Object in _neighborhoodFilters) {
+			if (_neighborhoods[mev.getVenue().getZip()] == neighborhoodFilter.neighborhood && neighborhoodFilter.selected) {
+				inNeighborhood = true;
 			}
 		}
 		// Genre filter.
@@ -70,7 +71,7 @@ private function runAllFilters():void {
 		if (_showNoPrice && mev.getPrice() < 0) {
 			inPrice = true;
 		}
-		setDisplay(mev, (inZip && inGenre && inTime && inPrice));
+		setDisplay(mev, (inNeighborhood && inGenre && inTime && inPrice));
 	}
 	redrawCircles();
 }
@@ -94,9 +95,9 @@ private function hideInfoBox():void {
 
 private function getSelectedNeighborhoods():ArrayCollection {
 	var selectedNeighborhoods:ArrayCollection = new ArrayCollection();
-	for each (var zipFilter:Object in _neighborhoodFilters) {
-			if (zipFilter.selected) {
-				selectedNeighborhoods.addItem(zipFilter);
+	for each (var neighborhoodFilter:Object in _neighborhoodFilters) {
+			if (neighborhoodFilter.selected) {
+				selectedNeighborhoods.addItem(neighborhoodFilter);
 			}
 		}
 	return selectedNeighborhoods;
@@ -151,8 +152,8 @@ private function multiCheckBoxSelect(linkButton:LinkButton,
 	point.x=0;
 	point.y=0;        
 	point=linkButton.localToGlobal(point);
-	multiCheckBoxPopup.x=point.x + 120;
-	multiCheckBoxPopup.y=point.y - 40;
+	multiCheckBoxPopup.x=point.x - 100;
+	multiCheckBoxPopup.y=point.y - 300;
 }
 
 // Draw our dual drag slider labels.
@@ -178,7 +179,6 @@ private function priceDataTipFunction(value:String):String
 // Handler for a change on the time slider.
 private function timeSliderChangeEvent(event:Event):void
 {
-	trace("TIMESLIDERCHANGEEVENT!!!");
 	_minSelectedDate = calculateDateFromSlider(event.target.values[0]);
 	_maxSelectedDate = calculateDateFromSlider(event.target.values[1]);
 	timeSelected.text = "Time: from " + formatDate(_minSelectedDate) + " to " + formatDate(_maxSelectedDate);
@@ -188,7 +188,6 @@ private function timeSliderChangeEvent(event:Event):void
 // Handler for a change on the price slider.
 private function priceSliderChangeEvent(event:Event):void
 {
-	trace("PRICESLIDERCHANGEEVENT!!!");
 	_minSelectedPrice = calculatePriceFromSlider(event.target.values[0]);
 	_maxSelectedPrice = calculatePriceFromSlider(event.target.values[1]);
 	priceSelected.text = "Price: from " + formatPrice(_minSelectedPrice) + " to " + formatPrice(_maxSelectedPrice);
@@ -223,35 +222,35 @@ private function noPriceChangeEvent():void
 
 // Initialize the dates selected on the date slider.
 private function initializeSelectedDates():void {
-	_minSelectedDate = calculateDateFromSlider(25);
-	_maxSelectedDate = calculateDateFromSlider(75);
+	_minSelectedDate = calculateDateFromSlider(0);
+	_maxSelectedDate = calculateDateFromSlider(10);
 	timeSelected.text = "Time: from " + formatDate(_minSelectedDate) + " to " + formatDate(_maxSelectedDate);
 }
 
 // Initialize the prices selected on the price slider.
 private function initializeSelectedPrices():void {
-	_minSelectedPrice = calculatePriceFromSlider(25);
-	_maxSelectedPrice = calculatePriceFromSlider(75);
+	_minSelectedPrice = calculatePriceFromSlider(0);
+	_maxSelectedPrice = calculatePriceFromSlider(25);
 	priceSelected.text = "Price: from " + formatPrice(_minSelectedPrice) + " to " + formatPrice(_maxSelectedPrice);
 }
 
 // Highlights for genre and neighborhood.
-public static function highlightGenreAndNeighborhood(mev:MusicEvent):void {
+public function highlightGenreAndNeighborhood(mev:MusicEvent):void {
 	// Highlight the genre...
 	var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
 	genreLabel.setStyle("color", 0x00FFCC);
 	// ...and the Neighborhood.
-	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
+	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(_neighborhoods[mev.getVenue().getZip()]);
 	neighborhoodLabel.setStyle("color", 0x00FFCC);
 }
 
 // ...and corresponding unhighlight.
-private static function unhighlightGenreAndNeighborhood(mev:MusicEvent):void {
+private function unhighlightGenreAndNeighborhood(mev:MusicEvent):void {
 	// Highlight the genre...
 	var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
 	genreLabel.setStyle("color", 0x000000);
 	// ...and the Neighborhood.
-	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
+	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(_neighborhoods[mev.getVenue().getZip()]);
 	neighborhoodLabel.setStyle("color", 0x000000);
 }
 

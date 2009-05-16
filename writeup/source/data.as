@@ -13,26 +13,23 @@ private var _events:Array = new Array();
 
 // Map of zip codes to neighborhoods.
 private var _neighborhoods:Object = {
-                                     "01770":"Sherborn",
-                                     "02115":"Boston",
-                                     "02137":"Readville",
+                                     "02106":"Back Bay",
+                                     "02107":"Boston",
+                                     "02108":"Beacon Hill",
+                                     "02109":"Boston",
+                                     "02114":"Boston",
+                                     "02115":"Back Bay",
+                                     "02215":"Back Bay",
+                                     "02116":"Back Bay",
+                                     "02117":"South End",
+                                     "02118":"South End",
+                                     "02134":"Allston",
                                      "02138":"Harvard Square",
-                                     "02139":"Inman Square",
+                                     "02139":"Central Square",
                                      "02140":"Porter Square",
-                                     "02141":"East Cambridge",
                                      "02142":"Kendall Square",
                                      "02143":"East Somerville",
-                                     "02144":"West Somerville",
-                                     "02145":"Winter Hill",
-                                     "02148":"Malden",
-                                     "02150":"Chelsea",
-                                     "02151":"Revere Beach",
-                                     "02152":"Winthrop",
-                                     "02153":"Tufts University",
-                                     "02154":"East Cambridge",
-                                     "02155":"Medford",
-                                     "02156":"West Medford",
-                                     "02163":"Soldiers Field"
+                                     "02144":"Davis Square"
 
                                      }
 
@@ -90,7 +87,7 @@ private function parseData( result:String ):void {
 		if (!firstLine) {
 			var fields:Array = line.split("\t");
 			var venue:Venue = new Venue(fields[7], fields[8], fields[9], fields[10], fields[11], fields[12], parseFloat(fields[5]), parseFloat(fields[6]));
-			_events.push(new MusicEvent(fields[0], fields[2], fields[3], fields[4], venue, fields[14], fields[13], fields[15], fields[22]));
+			_events.push(new MusicEvent(fields[0], fields[1], fields[2], fields[3], fields[4], venue, fields[14], fields[13], fields[15], fields[22]));
 		} else {
 			firstLine = false;
 		}
@@ -101,10 +98,10 @@ private function parseData( result:String ):void {
 // Initialize our neighborhood data.
 private function initializeNeighborhoods():void {
 	for each (var mev:MusicEvent in _events) {
-		if (_neighborhoods[mev.getVenue().getZip()] != null && _neighborhoodsInData[mev.getVenue().getZip()] == null) {
-			var neighborhoodDataForControls:Object = {data:mev.getVenue().getZip(), label:StringUtil.trim(_neighborhoods[mev.getVenue().getZip()])};
+		if (_neighborhoods[mev.getVenue().getZip()] != null && _neighborhoodsInData[_neighborhoods[mev.getVenue().getZip()]] == null) {
+			var neighborhoodDataForControls:Object = {data:_neighborhoods[mev.getVenue().getZip()], label:StringUtil.trim(_neighborhoods[mev.getVenue().getZip()])};
 			_neighborhoodsForControls.addItem(neighborhoodDataForControls);
-			_neighborhoodsInData[mev.getVenue().getZip()] = _neighborhoods[mev.getVenue().getZip()];
+			_neighborhoodsInData[_neighborhoods[mev.getVenue().getZip()]] = _neighborhoods[mev.getVenue().getZip()];
 		}
 	}
 }

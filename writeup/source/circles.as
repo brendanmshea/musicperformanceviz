@@ -12,12 +12,12 @@ private function redrawCircles():void {
 	var count:uint = 1; // temporarily keep track of number of neighborhoods, to calculate the cluster centers
 	for each (var hood:Object in selectedNeighborhoods) {
 			var ccenter:Object = getClusterCenter(count++, selectedNeighborhoods.length, graph);
-			hoodinfo[hood.zip] = {eventcount:0, ccenter:ccenter};
+			hoodinfo[hood.neighborhood] = {eventcount:0, ccenter:ccenter};
 
-			trace("trying to label " + hood.zip + " with: " + _neighborhoods[hood.zip]);
+			trace("trying to label " + hood.neighborhood + " with: " + hood.neighborhood);
 			var comp:UIComponent = new UIComponent();
 			var label:Label = new Label();
-			label.text = _neighborhoods[hood.zip];
+			label.text = hood.neighborhood;
 			graph.addChild(label);
 			label.setStyle("color", 0x777777);
 			label.setStyle("fontSize", 24);
@@ -29,11 +29,12 @@ private function redrawCircles():void {
 	// now go through all the events
 	for each (var mev:MusicEvent in _events) {
 			if (mev.getDisplay()) { // and draw them only if they're supposed to be visible
-				var zip:String = mev.getVenue().getZip();
-				hoodinfo[zip].eventcount++; // track how many events are in this neighborhood
+				var neighborhood:String = _neighborhoods[mev.getVenue().getZip()];
+				trace("display circle for neighborhood " + neighborhood);
+				hoodinfo[neighborhood].eventcount++; // track how many events are in this neighborhood
 				//				trace("showing " + mev.getEventName() + " - " + hoodinfo[zip] + "th in " + zip);
-				new MEVComponent(mev, getGenreColor(mev.getType()), graph, hoodinfo[zip].eventcount, hoodinfo[zip].ccenter,
-				                 highlightGenreAndNeighborhood, unhighlightGenreAndNeighborhood);
+				new MEVComponent(mev, getGenreColor(mev.getType()), graph, hoodinfo[neighborhood].eventcount, hoodinfo[neighborhood].ccenter,
+				                 highlightGenreAndNeighborhood, unhighlightGenreAndNeighborhood, formatDate);
 			}
 		}
 }

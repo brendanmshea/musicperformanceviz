@@ -1,3 +1,4 @@
+// Music Event UI component -- the circle on the graph view.
 package
 {
 import flash.display.Shape;
@@ -23,23 +24,22 @@ public class MEVComponent extends UIComponent
 		var circle:Shape = new Shape();
 
 		var circleSize:uint = Math.pow(p_mev.getPrice(), 0.7) + 3;
+		// Free events get a fixed, small size.
 		if (p_mev.getPrice() == 0) {
-			circleSize = 3;
-			circle.graphics.lineStyle(3, 0x33FF00, 0.8);
+			circleSize = 4;
 		}
-		if (p_mev.getPrice() < 0) {
-			circleSize = 3;
-			circle.graphics.lineStyle(3, 0xFF0000, 0.8);
-		}
-
-		//		trace("at " + ccenter.x + ", " + ccenter.y);
 
 		var offset:Object = getSpiralOffset(nth);
 		var circleX:uint = ccenter.x + offset.x;
 		var circleY:uint = ccenter.y + offset.y;
 
-		circle.graphics.beginFill(color, 0.5);
-		circle.graphics.drawCircle(circleX, circleY, circleSize);
+		circle.graphics.beginFill(color, 0.6);
+		// Unknown price events are squares.
+		if (p_mev.getPrice() < 0) {
+			circle.graphics.drawRect(circleX, circleY, 8, 8);
+		} else {
+			circle.graphics.drawCircle(circleX, circleY, circleSize);
+		}
 		circle.graphics.endFill();
 
 		addChild(circle);

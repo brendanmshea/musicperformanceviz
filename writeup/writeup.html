@@ -138,7 +138,7 @@ a subset of the data that is of interest.
 <br/>
 <br/>
 The Graph view shows the data in an abstract representation -- location is encoded by position (the events are
-grouped by neighborhood), price is encoded by size, and genre is encoded by color.  Free events show up with a green ring around them, and events where we couldn't determine the price (which you will only see if you check 'Include No Price') show up with a red ring around them.
+grouped by neighborhood), price is encoded by size, and genre is encoded by color.  Events where we couldn't determine the price (which you will only see if you check 'Include No Price') show up as small squares, in order to differentiate them.
 <br/>
 <br/>
 The Map view shows the same data, but now displayed on a map.  Location is of course encoded by position, and genre
@@ -160,7 +160,7 @@ Price was another area where cleanup of the data needed to happen.  Often, the p
 	<li>"$27.50 - $35.00"</li>
 	<li>"$10 / $5 on Guest List"</li>
 </ul>
-In these cases, we parsed the string and used the first price that we find for filtering purposes (so for those examples, it would be $15, $27.50, and $10, respectively.)
+In these cases, we parsed the string and used the first price that we find for filtering purposes (so for those examples, it would be $15, $27.50, and $10, respectively.)  Even after this, some prices were unavailable.  This is the reason we have the 'Include No Price' checkbox.
 <br/>
 <br/>
 The data file (a tab separated file) that we use in the application is:&nbsp;<a href="data/cleangenres.tsv">cleangenres.tsv</a>
@@ -197,7 +197,7 @@ Beyond some incremental cleanup to the data quality and data scraping, we can en
 <ul>
 	<li>Enabling directions in the map view (to answer the question, 'How do I get from my house to the event?')</li>
 	<li>Textual searching and filtering (by artist or venue, say)</li>
-	<li>Showing some data distribution 'histogram' on the time and price sliders, to get an idea of where the bulk of events lie, or if they are evenly distributed</li>
+	<li>Showing some data distribution 'density plot' on the time and price sliders x-axes, to get an idea of where the bulk of events lie, or if they are evenly distributed</li>
 </ul>
 <h3>Final Thoughts</h3>
 Overall this was an enjoyable project to work on -- in addition to creating a cool visualization, we got to play

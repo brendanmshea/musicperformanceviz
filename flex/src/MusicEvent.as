@@ -3,6 +3,7 @@ package {
 import mx.containers.Canvas;
 public class MusicEvent {
 	private var _id:String;
+	private var _longId:String;
 	private var _eventName:String;
 	private var _rawStartTime:String;
 	private var _rawEndTime:String;
@@ -11,20 +12,21 @@ public class MusicEvent {
 	private var _displayPrice:String;
 	private var _rawPrice:String;
 	private var _price:Number;
-	private var _url:String;
+	private var _venueUrl:String;
 	private var _type:String;
 	private var _display:Boolean;
 	private var _graphItem:MEVComponent;
 
-	public function MusicEvent( id:String, eventName:String, startTime:String, endTime:String, venue:Venue, displayPrice:String, price:String, url:String, type:String) {
+	public function MusicEvent( id:String, longId:String, eventName:String, startTime:String, endTime:String, venue:Venue, displayPrice:String, price:String, venueUrl:String, type:String) {
 		_id = id;
+		_longId = longId;
 		_eventName = eventName;
 		_rawStartTime = startTime;
 		_rawEndTime = endTime;
 		_venue = venue;
 		_displayPrice = displayPrice;
 		_rawPrice = price;
-		_url = url;
+		_venueUrl = venueUrl;
 		_type=type;
 		// Initialize display to false.
 		_display = false;
@@ -55,8 +57,11 @@ public class MusicEvent {
 	public function getRawPrice( ):String {
 		return _rawPrice;
 	}
-	public function getUrl( ):String {
-		return _url;
+	public function getVenueUrl( ):String {
+		return _venueUrl;
+	}
+	public function getEventUrl():String {
+		return "http://calendar.boston.com/events/show/" + _longId;
 	}
 	public function getType( ):String {
 		return _type;

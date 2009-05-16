@@ -17,8 +17,8 @@ private var _maxSelectedPrice:Number = 0;
 private var _showNoPrice:Boolean = false;
 
 // Add or remove the given neighborhood filters.
-private function recordNeighborhood(zip:String, selected:Boolean):void {
-	_neighborhoodFilters.addItem({zip:zip, selected:selected});
+private function recordNeighborhood(neighborhood:String, selected:Boolean):void {
+	_neighborhoodFilters.addItem({neighborhood:neighborhood, selected:selected});
 }
 
 // Initialize the neighborhood filters.
@@ -41,10 +41,10 @@ private function initializeGenreFilters():void {
 private function runAllFilters():void {
 	for each (var mev:MusicEvent in _events) {
 		// Neighborhood filter.
-		var inZip:Boolean = false;
-		for each (var zipFilter:Object in _neighborhoodFilters) {
-			if (mev.getVenue().getZip() == zipFilter.zip && zipFilter.selected) {
-				inZip = true;
+		var inNeighborhood:Boolean = false;
+		for each (var neighborhoodFilter:Object in _neighborhoodFilters) {
+			if (_neighborhoods[mev.getVenue().getZip()] == neighborhoodFilter.neighborhood && neighborhoodFilter.selected) {
+				inNeighborhood = true;
 			}
 		}
 		// Genre filter.
@@ -71,7 +71,7 @@ private function runAllFilters():void {
 		if (_showNoPrice && mev.getPrice() < 0) {
 			inPrice = true;
 		}
-		setDisplay(mev, (inZip && inGenre && inTime && inPrice));
+		setDisplay(mev, (inNeighborhood && inGenre && inTime && inPrice));
 	}
 	redrawCircles();
 }
@@ -95,9 +95,9 @@ private function hideInfoBox():void {
 
 private function getSelectedNeighborhoods():ArrayCollection {
 	var selectedNeighborhoods:ArrayCollection = new ArrayCollection();
-	for each (var zipFilter:Object in _neighborhoodFilters) {
-			if (zipFilter.selected) {
-				selectedNeighborhoods.addItem(zipFilter);
+	for each (var neighborhoodFilter:Object in _neighborhoodFilters) {
+			if (neighborhoodFilter.selected) {
+				selectedNeighborhoods.addItem(neighborhoodFilter);
 			}
 		}
 	return selectedNeighborhoods;
@@ -235,22 +235,22 @@ private function initializeSelectedPrices():void {
 }
 
 // Highlights for genre and neighborhood.
-public static function highlightGenreAndNeighborhood(mev:MusicEvent):void {
+public function highlightGenreAndNeighborhood(mev:MusicEvent):void {
 	// Highlight the genre...
 	var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
 	genreLabel.setStyle("color", 0x00FFCC);
 	// ...and the Neighborhood.
-	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
+	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(_neighborhoods[mev.getVenue().getZip()]);
 	neighborhoodLabel.setStyle("color", 0x00FFCC);
 }
 
 // ...and corresponding unhighlight.
-private static function unhighlightGenreAndNeighborhood(mev:MusicEvent):void {
+private function unhighlightGenreAndNeighborhood(mev:MusicEvent):void {
 	// Highlight the genre...
 	var genreLabel:Label = Application.application.genreSelections.getChildByName(mev.getType());
 	genreLabel.setStyle("color", 0x000000);
 	// ...and the Neighborhood.
-	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(mev.getVenue().getZip());
+	var neighborhoodLabel:Label = Application.application.neighborhoodsSelections.getChildByName(_neighborhoods[mev.getVenue().getZip()]);
 	neighborhoodLabel.setStyle("color", 0x000000);
 }
 

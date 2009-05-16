@@ -4,9 +4,6 @@ import flash.display.Shape;
 import flash.events.MouseEvent;
 
 import mx.containers.Canvas;
-import mx.containers.Box;
-import mx.controls.Label;
-import mx.controls.Text;
 import mx.core.Application;
 import mx.core.UIComponent;
 
@@ -15,11 +12,13 @@ public class MEVComponent extends UIComponent
 	internal var mev: MusicEvent;
 	internal var highlight: Function;
 	internal var unhighlight: Function;
-	public function MEVComponent(p_mev: MusicEvent, color: int, c: Canvas, nth:Number, ccenter:Object, p_highlight:Function, p_unhighlight:Function) {
+	internal var formatDate: Function;
+	public function MEVComponent(p_mev: MusicEvent, color: int, c: Canvas, nth:Number, ccenter:Object, p_highlight:Function, p_unhighlight:Function, p_formatDate:Function) {
 		super();
 		mev = p_mev;
 		highlight = p_highlight;
 		unhighlight = p_unhighlight;
+		formatDate = p_formatDate;
 
 		var circle:Shape = new Shape();
 
@@ -55,11 +54,12 @@ public class MEVComponent extends UIComponent
 	}
 
 	private function handleClick(event:MouseEvent):void {
-		var info:String = mev.getEventName() + "<br/>"
-			+ "Price: " + mev.getDisplayPrice() + "<br/>"
-			+ "Venue: " + mev.getVenue().getVenue() + "<br/>"
-			+ "Genre: " + mev.getType() + "<br/>"
-			+ "<a href='" + mev.getUrl() + "' style='text-decoration:underline;'>" + mev.getUrl() + "</a><br/>"
+		var info:String = mev.getEventName() + "<br/><br/>"
+			+ mev.getVenue().getVenue() + "<br/>"
+			+ "<a href='" + mev.getVenueUrl() + "'>" + mev.getVenueUrl() + "</a><br/>"
+			+ mev.getDisplayPrice() + "<br/>"
+			+ formatDate(mev.getStartTime()) + "<br/>"
+			+ "<a href='" + mev.getEventUrl() + "'>" + mev.getEventUrl() + "</a><br/>"
 			;
 
 		Application.application.eventDescriptionBox.setVisible(true);
